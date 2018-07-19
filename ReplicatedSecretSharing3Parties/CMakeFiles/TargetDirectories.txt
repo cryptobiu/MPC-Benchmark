@@ -1,3 +1,0 @@
-/home/liork/libscapi/protocols/ReplicatedSecretSharing3Parties/CMakeFiles/rebuild_cache.dir
-/home/liork/libscapi/protocols/ReplicatedSecretSharing3Parties/CMakeFiles/edit_cache.dir
-/home/liork/libscapi/protocols/ReplicatedSecretSharing3Parties/CMakeFiles/ReplicatedSecretSharing3Parties.dir

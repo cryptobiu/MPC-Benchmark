@@ -1,1 +1,0 @@
-/usr/bin/c++  -g   CMakeFiles/BCast.dir/main.cpp.o CMakeFiles/BCast.dir/BCast.cpp.o  -o BCast  -L/usr/ssl/lib  -L/home/liork/libscapi/install/lib -Wl,-rpath,/usr/ssl/lib:/home/liork/libscapi/install/lib /home/liork/libscapi/libscapi.a -lgmp -lgmpxx -Wl,-Bstatic -lboost_system -Wl,-Bdynamic -lpthread -ldl 
