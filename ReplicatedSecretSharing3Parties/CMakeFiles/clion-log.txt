@@ -1,0 +1,4 @@
+/home/liork/clion-2018.1.2/bin/cmake/bin/cmake -DCMAKE_BUILD_TYPE= -G "CodeBlocks - Unix Makefiles" /home/liork/libscapi/protocols/ReplicatedSecretSharing3Parties
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/liork/libscapi/protocols/ReplicatedSecretSharing3Parties

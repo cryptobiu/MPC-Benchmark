@@ -1,0 +1,259 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{DC989764-674D-49F5-91E7-EC043765B7B9}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>MaliciousYao</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+    <CharacterSet>
+    </CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>C:\Users\stav\libscapi\include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>..\..\cereal\include;C:\local\boost_1_60_0;C:\OpenSSL-Win64\include;..\..\libscapi\lib\MiraclWin64\source;..\..\libscapi\lib;..\..\;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>C:\Program Files\OpenSSL-Win64\include;C:\Users\stav\libscapi\include;$(IncludePath)</IncludePath>
+    <IncludePath>..\..\libscapi\lib\NTL\windows\include;C:\local\boost_1_60_0;C:\OpenSSL-Win64\include;..\..\libscapi\lib\MiraclWin64\source;..\..\libscapi\lib;..\..\;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level1</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_WIN32_WINNT=0x06030000;_SCL_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\libscapi\lib;..\..\cereal\include;C:\OpenSSL-Win64\include;..\..\;C:\local\boost_1_60_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>C:\Users\stav\libscapi\windows-solutions\scapi-sln\x64\Debug\ScapiCpp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level1</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>
+      </SDLCheck>
+      <AdditionalIncludeDirectories>C:\Users\stav\;C:\local\boost_1_60_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_WIN32_WINNT=0x06030000;_SCL_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\libscapi\lib\NTL\windows\include;..\..\libscapi\lib;C:\OpenSSL-Win64\include;..\..\;C:\local\boost_1_60_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>C:\Users\stav\libscapi\windows-solutions\scapi-sln\x64\Debug\ScapiCpp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <Text Include="assets\conf\PartiesConfig.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\CommitmentWithZkProofOfDifference\CmtWithDifferenceCommitter.cpp" />
+    <ClCompile Include="src\CommitmentWithZkProofOfDifference\CmtWithDifferenceParty.cpp" />
+    <ClCompile Include="src\CommitmentWithZkProofOfDifference\CmtWithDifferenceReceiver.cpp" />
+    <ClCompile Include="src\CommitmentWithZkProofOfDifference\DifferenceCommitmentCommitterBundle.cpp" />
+    <ClCompile Include="src\CommitmentWithZkProofOfDifference\ProveDiff.cpp" />
+    <ClCompile Include="src\CommitmentWithZkProofOfDifference\SC.cpp" />
+    <ClCompile Include="src\CommitmentWithZkProofOfDifference\SCom.cpp" />
+    <ClCompile Include="src\common\BinaryUtils.cpp" />
+    <ClCompile Include="src\common\CommonMaliciousYao.cpp" />
+    <ClCompile Include="src\common\KeyUtils.cpp" />
+    <ClCompile Include="src\OfflineOnline\primitives\BucketBundleList.cpp" />
+    <ClCompile Include="src\OfflineOnline\primitives\BucketLimitedBundleList.cpp" />
+    <ClCompile Include="src\OfflineOnline\primitives\BucketMapping.cpp" />
+    <ClCompile Include="src\OfflineOnline\primitives\Bundle.cpp" />
+    <ClCompile Include="src\OfflineOnline\primitives\BundleBuilder.cpp" />
+    <ClCompile Include="src\OfflineOnline\primitives\CheatingRecoveryBundleBuilder.cpp" />
+    <ClCompile Include="src\OfflineOnline\primitives\CommitmentBundle.cpp" />
+    <ClCompile Include="src\OfflineOnline\primitives\CommitmentsPackage.cpp" />
+    <ClCompile Include="src\OfflineOnline\primitives\DecommitmentsPackage.cpp" />
+    <ClCompile Include="src\OfflineOnline\primitives\EvaluationPackage.cpp" />
+    <ClCompile Include="src\OfflineOnline\primitives\LimitedBundle.cpp" />
+    <ClCompile Include="src\OfflineOnline\specs\OfflineProtocolP1.cpp" />
+    <ClCompile Include="src\OfflineOnline\specs\OfflineProtocolP2.cpp" />
+    <ClCompile Include="src\OfflineOnline\specs\OnlineProtocolP1.cpp" />
+    <ClCompile Include="src\OfflineOnline\specs\OnlineProtocolP2.cpp" />
+    <ClCompile Include="src\OfflineOnline\subroutines\CutAndChooseProver.cpp" />
+    <ClCompile Include="src\OfflineOnline\subroutines\CutAndChooseVerifier.cpp" />
+    <ClCompile Include="src\OfflineOnline\subroutines\OfflineOtReceiverRoutine.cpp" />
+    <ClCompile Include="src\OfflineOnline\subroutines\OfflineOtSenderRoutine.cpp" />
+    <ClCompile Include="src\OfflineOnline\subroutines\OnlineComputeRoutine.cpp" />
+    <ClCompile Include="src\primitives\CheatingRecoveryCircuitCreator.cpp" />
+    <ClCompile Include="src\primitives\CircuitInput.cpp" />
+    <ClCompile Include="src\primitives\CommunicationConfig.cpp" />
+    <ClCompile Include="src\primitives\CryptoPrimitives.cpp" />
+    <ClCompile Include="src\primitives\CutAndChooseSelection.cpp" />
+    <ClCompile Include="src\primitives\KProbeResistantMatrix.cpp" />
+    <ClCompile Include="src\primitives\SeededRandomnessProvider.cpp" />
+    <ClCompile Include="src\primitives\UnlockP1InputCircuitCreator.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\CommitmentWithZkProofOfDifference\CmtWithDifferenceCommitter.hpp" />
+    <ClInclude Include="include\CommitmentWithZkProofOfDifference\CmtWithDifferenceParty.hpp" />
+    <ClInclude Include="include\CommitmentWithZkProofOfDifference\CmtWithDifferenceReceiver.hpp" />
+    <ClInclude Include="include\CommitmentWithZkProofOfDifference\DifferenceCommitmentCommitterBundle.hpp" />
+    <ClInclude Include="include\CommitmentWithZkProofOfDifference\DifferenceCommitmentReceiverBundle.hpp" />
+    <ClInclude Include="include\CommitmentWithZkProofOfDifference\ProveDiff.hpp" />
+    <ClInclude Include="include\CommitmentWithZkProofOfDifference\SC.hpp" />
+    <ClInclude Include="include\CommitmentWithZkProofOfDifference\SCom.hpp" />
+    <ClInclude Include="include\common\aligned_allocator.hpp" />
+    <ClInclude Include="include\common\aligned_allocator_no_destructor.hpp" />
+    <ClInclude Include="include\common\BinaryUtils.hpp" />
+    <ClInclude Include="include\common\CommonMaliciousYao.hpp" />
+    <ClInclude Include="include\common\KeyUtils.hpp" />
+    <ClInclude Include="include\common\LogTimer.hpp" />
+    <ClInclude Include="include\OfflineOnline\primitives\BucketBundle.hpp" />
+    <ClInclude Include="include\OfflineOnline\primitives\BucketBundleList.hpp" />
+    <ClInclude Include="include\OfflineOnline\primitives\BucketLimitedBundle.hpp" />
+    <ClInclude Include="include\OfflineOnline\primitives\BucketLimitedBundleList.hpp" />
+    <ClInclude Include="include\OfflineOnline\primitives\BucketMapping.hpp" />
+    <ClInclude Include="include\OfflineOnline\primitives\Bundle.hpp" />
+    <ClInclude Include="include\OfflineOnline\primitives\BundleBuilder.hpp" />
+    <ClInclude Include="include\OfflineOnline\primitives\CheatingRecoveryBundleBuilder.hpp" />
+    <ClInclude Include="include\OfflineOnline\primitives\CommitmentBundle.hpp" />
+    <ClInclude Include="include\OfflineOnline\primitives\CommitmentsPackage.hpp" />
+    <ClInclude Include="include\OfflineOnline\primitives\DecommitmentsPackage.hpp" />
+    <ClInclude Include="include\OfflineOnline\primitives\EvaluationPackage.hpp" />
+    <ClInclude Include="include\OfflineOnline\primitives\LimitedBundle.hpp" />
+    <ClInclude Include="include\OfflineOnline\specs\OfflineProtocolP1.hpp" />
+    <ClInclude Include="include\OfflineOnline\specs\OfflineProtocolP2.hpp" />
+    <ClInclude Include="include\OfflineOnline\specs\OnlineProtocolP1.hpp" />
+    <ClInclude Include="include\OfflineOnline\specs\OnlineProtocolP2.hpp" />
+    <ClInclude Include="include\OfflineOnline\subroutines\CutAndChooseProver.hpp" />
+    <ClInclude Include="include\OfflineOnline\subroutines\CutAndChooseVerifier.hpp" />
+    <ClInclude Include="include\OfflineOnline\subroutines\OfflineOtReceiverRoutine.hpp" />
+    <ClInclude Include="include\OfflineOnline\subroutines\OfflineOtSenderRoutine.hpp" />
+    <ClInclude Include="include\OfflineOnline\subroutines\OnlineComputeRoutine.hpp" />
+    <ClInclude Include="include\primitives\CheatingRecoveryCircuitCreator.hpp" />
+    <ClInclude Include="include\primitives\CircuitInput.hpp" />
+    <ClInclude Include="include\primitives\CircuitOutput.hpp" />
+    <ClInclude Include="include\primitives\CommunicationConfig.hpp" />
+    <ClInclude Include="include\primitives\CryptoPrimitives.hpp" />
+    <ClInclude Include="include\primitives\CutAndChooseSelection.hpp" />
+    <ClInclude Include="include\primitives\ExecutionParameters.hpp" />
+    <ClInclude Include="include\primitives\KProbeResistantMatrix.hpp" />
+    <ClInclude Include="include\primitives\SeededRandomnessProvider.hpp" />
+    <ClInclude Include="include\primitives\UnlockP1InputCircuitCreator.hpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

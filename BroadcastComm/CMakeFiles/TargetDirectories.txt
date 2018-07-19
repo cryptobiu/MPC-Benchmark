@@ -1,0 +1,3 @@
+/home/liork/libscapi/protocols/BroadcastComm/CMakeFiles/edit_cache.dir
+/home/liork/libscapi/protocols/BroadcastComm/CMakeFiles/rebuild_cache.dir
+/home/liork/libscapi/protocols/BroadcastComm/CMakeFiles/BCast.dir

@@ -1,0 +1,76 @@
+/**
+* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+*
+* Copyright (c) 2016 LIBSCAPI (http://crypto.biu.ac.il/SCAPI)
+* This file is part of the SCAPI project.
+* DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+*
+* Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"),
+* to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+* and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+*
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+* FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+* WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*
+* We request that any publication and/or code referring to and/or based on SCAPI contain an appropriate citation to SCAPI, including a reference to
+* http://crypto.biu.ac.il/SCAPI.
+*
+* Libscapi uses several open source libraries. Please see these projects for any further licensing issues.
+* For more information , See https://github.com/cryptobiu/libscapi/blob/master/LICENSE.MD
+*
+* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+*
+*/
+
+INTRODUCTION
+------------
+
+This is an executable that runs party one of the online phase of the malicious Yao protocol.
+
+The implementation is based on "Blazing Fast 2PC in the Offline/Online Setting with Security for Malicious Adversaries"
+by Yehuda Lindell and Ben Riva. The paper can be found at https://eprint.iacr.org/2015/987.
+
+Recently, several new techniques were presented to dramatically improve key parts of secure two-party computation (2PC)
+protocols that use the cut-and-choose paradigm on garbled circuits for 2PC with security against malicious adversaries.
+These include techniques for reducing the number of garbled circuits (Lindell 13, Huang et al.~13, Lindell and Riva 14,
+Huang et al.~14) and techniques for reducing the overheads besides garbled circuits (Mohassel and Riva 13, Shen and Shelat~13).
+
+We design a highly optimized protocol in the offline/online setting that makes use of all state-of-the-art techniques,
+along with several new techniques that we introduce. A crucial part of our protocol is a new technique for enforcing
+consistency of the inputs used by the party who garbles the circuits. This technique has both theoretical and practical
+advantages over \mbox{previous methods.}
+
+
+INSTALLATION AND EXECUTION
+--------------------------
+
+In order to run this application, one should compile the malicious Yao lib first.
+See README at MaliciousYao/lib.
+
+In order to compile and run The OnlineP1 application:
+1. Go in the MaliciousYao/apps/OnlineP1 directory.
+2. Run the make command.
+3. to execute run :
+ ~ ./AppOnlineP1.out -circuitFile {main_circuit_path} -inputFile {input_file_path}
+                     -circuitCRFile {cr_circuit_path}
+                     -bucketsPrefixMain {location_to_put_main_buckets} -bucketsPrefixCR {location_to_put_cr_buckets}
+                      -partiesFile {parties_file_name}
+                      -n1 {N1} -b1 {B1} -s1 {S1} -p1 {P1} -n2 {N2} -b2 {B2} -s2 {S2} -p2 {P2}
+ for example :
+ ~ ./AppOnlineP1.out -circuitFile "/lib/assets/circuits/AES/NigelAes.txt" -inputFile "/lib/assets/circuits/AES/AESPartyOneInputs.txt"
+                      -circuitCRFile "/lib/assets/circuits/CheatingRecovery/UnlockP1Input.txt"
+                      -bucketsPrefixMain "/lib/data/P1/aes" -bucketsPrefixCR "/lib/data/P1/cr" -partiesFile "/lib/assets/conf/PartiesConfig.txt"
+                      -n1 32 -b1 7 -s1 40 -p1 0.62 -n2 32 -b2 20 -s2 40 -p2 0.71
+
+
+
+
+
+
+
+
+
+

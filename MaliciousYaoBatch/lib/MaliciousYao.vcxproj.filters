@@ -1,0 +1,329 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\primitives">
+      <UniqueIdentifier>{c8da142f-be82-4d08-962f-c01945a5e9b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\primitives">
+      <UniqueIdentifier>{83c83a28-dafa-4c48-a052-122fed145aa4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\assets">
+      <UniqueIdentifier>{02248d9c-dd28-4488-ba44-f20f9716bc8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\assets\conf">
+      <UniqueIdentifier>{e2236d8e-2dd5-4a48-9cf5-3019532589c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\assets\circuits">
+      <UniqueIdentifier>{a31cf03f-8bd8-49a2-89f8-9b2def036ff9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\common">
+      <UniqueIdentifier>{4f1819e2-2360-4089-9bc6-846039fbd481}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\common">
+      <UniqueIdentifier>{8a4262d5-d26d-4fc9-ab3f-450aac3ec94f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\OfflineOnline">
+      <UniqueIdentifier>{b73f8e29-ac88-4f0b-9042-a41fd1f96904}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\OfflineOnline\specs">
+      <UniqueIdentifier>{8d814e9a-9318-483a-98a1-1c49894de513}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\OfflineOnline">
+      <UniqueIdentifier>{b7af4761-ab25-42ae-a0c5-b3ac241c3cae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\OfflineOnline\specs">
+      <UniqueIdentifier>{232a053b-97e7-4f89-8ca3-d9a6fab84271}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\CommitmentWithZkProofOfDifference">
+      <UniqueIdentifier>{b6cb9eb1-a189-46e5-af19-b2666030fdb8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\CommitmentWithZkProofOfDifference">
+      <UniqueIdentifier>{f9d3eb7d-ec50-40c3-91e5-7656882ece2e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\OfflineOnline\primitives">
+      <UniqueIdentifier>{a0ab05c4-af5c-4b70-939f-4e86e63dfbca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\OfflineOnline\primitives">
+      <UniqueIdentifier>{dd8238f8-c5f1-4450-8000-2ee0b189d7a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\OfflineOnline\subroutines">
+      <UniqueIdentifier>{b6777ae8-9578-459a-9e2e-b6bb4fb073d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\OfflineOnline\subroutines">
+      <UniqueIdentifier>{176dfbea-c590-4d72-b9df-504364940e78}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="assets\conf\PartiesConfig.txt">
+      <Filter>Resource Files\assets\conf</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\primitives\CommunicationConfig.cpp">
+      <Filter>Source Files\primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\primitives\UnlockP1InputCircuitCreator.cpp">
+      <Filter>Source Files\primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\primitives\CheatingRecoveryCircuitCreator.cpp">
+      <Filter>Source Files\primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\primitives\CircuitInput.cpp">
+      <Filter>Source Files\primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\common\CommonMaliciousYao.cpp">
+      <Filter>Source Files\common</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OfflineOnline\specs\OfflineProtocolP1.cpp">
+      <Filter>Source Files\OfflineOnline\specs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\primitives\KProbeResistantMatrix.cpp">
+      <Filter>Source Files\primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CommitmentWithZkProofOfDifference\DifferenceCommitmentCommitterBundle.cpp">
+      <Filter>Source Files\CommitmentWithZkProofOfDifference</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CommitmentWithZkProofOfDifference\SCom.cpp">
+      <Filter>Source Files\CommitmentWithZkProofOfDifference</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CommitmentWithZkProofOfDifference\SC.cpp">
+      <Filter>Source Files\CommitmentWithZkProofOfDifference</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OfflineOnline\primitives\CommitmentsPackage.cpp">
+      <Filter>Source Files\OfflineOnline\primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OfflineOnline\primitives\Bundle.cpp">
+      <Filter>Source Files\OfflineOnline\primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OfflineOnline\primitives\BucketMapping.cpp">
+      <Filter>Source Files\OfflineOnline\primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OfflineOnline\primitives\BucketBundleList.cpp">
+      <Filter>Source Files\OfflineOnline\primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OfflineOnline\subroutines\OfflineOtSenderRoutine.cpp">
+      <Filter>Source Files\OfflineOnline\subroutines</Filter>
+    </ClCompile>
+    <ClCompile Include="src\common\KeyUtils.cpp">
+      <Filter>Source Files\common</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OfflineOnline\primitives\CommitmentBundle.cpp">
+      <Filter>Source Files\OfflineOnline\primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OfflineOnline\primitives\BundleBuilder.cpp">
+      <Filter>Source Files\OfflineOnline\primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\common\BinaryUtils.cpp">
+      <Filter>Source Files\common</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OfflineOnline\subroutines\CutAndChooseProver.cpp">
+      <Filter>Source Files\OfflineOnline\subroutines</Filter>
+    </ClCompile>
+    <ClCompile Include="src\primitives\CutAndChooseSelection.cpp">
+      <Filter>Source Files\primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CommitmentWithZkProofOfDifference\CmtWithDifferenceCommitter.cpp">
+      <Filter>Source Files\CommitmentWithZkProofOfDifference</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CommitmentWithZkProofOfDifference\CmtWithDifferenceParty.cpp">
+      <Filter>Source Files\CommitmentWithZkProofOfDifference</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OfflineOnline\primitives\DecommitmentsPackage.cpp">
+      <Filter>Source Files\OfflineOnline\primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CommitmentWithZkProofOfDifference\ProveDiff.cpp">
+      <Filter>Source Files\CommitmentWithZkProofOfDifference</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OfflineOnline\primitives\CheatingRecoveryBundleBuilder.cpp">
+      <Filter>Source Files\OfflineOnline\primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OfflineOnline\primitives\EvaluationPackage.cpp">
+      <Filter>Source Files\OfflineOnline\primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OfflineOnline\primitives\LimitedBundle.cpp">
+      <Filter>Source Files\OfflineOnline\primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OfflineOnline\specs\OnlineProtocolP1.cpp">
+      <Filter>Source Files\OfflineOnline\specs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OfflineOnline\primitives\BucketLimitedBundleList.cpp">
+      <Filter>Source Files\OfflineOnline\primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OfflineOnline\specs\OfflineProtocolP2.cpp">
+      <Filter>Source Files\OfflineOnline\specs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OfflineOnline\subroutines\CutAndChooseVerifier.cpp">
+      <Filter>Source Files\OfflineOnline\subroutines</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CommitmentWithZkProofOfDifference\CmtWithDifferenceReceiver.cpp">
+      <Filter>Source Files\CommitmentWithZkProofOfDifference</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OfflineOnline\subroutines\OfflineOtReceiverRoutine.cpp">
+      <Filter>Source Files\OfflineOnline\subroutines</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OfflineOnline\specs\OnlineProtocolP2.cpp">
+      <Filter>Source Files\OfflineOnline\specs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OfflineOnline\subroutines\OnlineComputeRoutine.cpp">
+      <Filter>Source Files\OfflineOnline\subroutines</Filter>
+    </ClCompile>
+    <ClCompile Include="src\primitives\SeededRandomnessProvider.cpp">
+      <Filter>Source Files\primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\primitives\CryptoPrimitives.cpp">
+      <Filter>Source Files\primitives</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\primitives\CommunicationConfig.hpp">
+      <Filter>Header Files\primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="include\primitives\CryptoPrimitives.hpp">
+      <Filter>Header Files\primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="include\primitives\UnlockP1InputCircuitCreator.hpp">
+      <Filter>Header Files\primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="include\primitives\CheatingRecoveryCircuitCreator.hpp">
+      <Filter>Header Files\primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="include\primitives\CircuitInput.hpp">
+      <Filter>Header Files\primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="include\common\CommonMaliciousYao.hpp">
+      <Filter>Header Files\common</Filter>
+    </ClInclude>
+    <ClInclude Include="include\primitives\ExecutionParameters.hpp">
+      <Filter>Header Files\primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OfflineOnline\specs\OfflineProtocolP1.hpp">
+      <Filter>Header Files\OfflineOnline\specs</Filter>
+    </ClInclude>
+    <ClInclude Include="include\primitives\KProbeResistantMatrix.hpp">
+      <Filter>Header Files\primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CommitmentWithZkProofOfDifference\DifferenceCommitmentCommitterBundle.hpp">
+      <Filter>Header Files\CommitmentWithZkProofOfDifference</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CommitmentWithZkProofOfDifference\SCom.hpp">
+      <Filter>Header Files\CommitmentWithZkProofOfDifference</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CommitmentWithZkProofOfDifference\SC.hpp">
+      <Filter>Header Files\CommitmentWithZkProofOfDifference</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OfflineOnline\primitives\CommitmentsPackage.hpp">
+      <Filter>Header Files\OfflineOnline\primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OfflineOnline\primitives\Bundle.hpp">
+      <Filter>Header Files\OfflineOnline\primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OfflineOnline\primitives\BucketMapping.hpp">
+      <Filter>Header Files\OfflineOnline\primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OfflineOnline\primitives\BucketBundle.hpp">
+      <Filter>Header Files\OfflineOnline\primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OfflineOnline\primitives\BucketBundleList.hpp">
+      <Filter>Header Files\OfflineOnline\primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="include\common\aligned_allocator_no_destructor.hpp">
+      <Filter>Header Files\common</Filter>
+    </ClInclude>
+    <ClInclude Include="include\common\aligned_allocator.hpp">
+      <Filter>Header Files\common</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OfflineOnline\subroutines\OfflineOtSenderRoutine.hpp">
+      <Filter>Header Files\OfflineOnline\subroutines</Filter>
+    </ClInclude>
+    <ClInclude Include="include\common\KeyUtils.hpp">
+      <Filter>Header Files\common</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OfflineOnline\primitives\CommitmentBundle.hpp">
+      <Filter>Header Files\OfflineOnline\primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OfflineOnline\primitives\BundleBuilder.hpp">
+      <Filter>Header Files\OfflineOnline\primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="include\common\BinaryUtils.hpp">
+      <Filter>Header Files\common</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OfflineOnline\subroutines\CutAndChooseProver.hpp">
+      <Filter>Header Files\OfflineOnline\subroutines</Filter>
+    </ClInclude>
+    <ClInclude Include="include\primitives\CutAndChooseSelection.hpp">
+      <Filter>Header Files\primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CommitmentWithZkProofOfDifference\CmtWithDifferenceCommitter.hpp">
+      <Filter>Header Files\CommitmentWithZkProofOfDifference</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CommitmentWithZkProofOfDifference\CmtWithDifferenceParty.hpp">
+      <Filter>Header Files\CommitmentWithZkProofOfDifference</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OfflineOnline\primitives\DecommitmentsPackage.hpp">
+      <Filter>Header Files\OfflineOnline\primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CommitmentWithZkProofOfDifference\ProveDiff.hpp">
+      <Filter>Header Files\CommitmentWithZkProofOfDifference</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OfflineOnline\primitives\CheatingRecoveryBundleBuilder.hpp">
+      <Filter>Header Files\OfflineOnline\primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="include\common\LogTimer.hpp">
+      <Filter>Header Files\common</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OfflineOnline\primitives\LimitedBundle.hpp">
+      <Filter>Header Files\OfflineOnline\primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CommitmentWithZkProofOfDifference\DifferenceCommitmentReceiverBundle.hpp">
+      <Filter>Header Files\CommitmentWithZkProofOfDifference</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OfflineOnline\primitives\EvaluationPackage.hpp">
+      <Filter>Header Files\OfflineOnline\primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OfflineOnline\specs\OnlineProtocolP1.hpp">
+      <Filter>Header Files\OfflineOnline\specs</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OfflineOnline\primitives\BucketLimitedBundle.hpp">
+      <Filter>Header Files\OfflineOnline\primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OfflineOnline\primitives\BucketLimitedBundleList.hpp">
+      <Filter>Header Files\OfflineOnline\primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OfflineOnline\specs\OfflineProtocolP2.hpp">
+      <Filter>Header Files\OfflineOnline\specs</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OfflineOnline\subroutines\CutAndChooseVerifier.hpp">
+      <Filter>Header Files\OfflineOnline\subroutines</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CommitmentWithZkProofOfDifference\CmtWithDifferenceReceiver.hpp">
+      <Filter>Header Files\CommitmentWithZkProofOfDifference</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OfflineOnline\subroutines\OfflineOtReceiverRoutine.hpp">
+      <Filter>Header Files\OfflineOnline\subroutines</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OfflineOnline\specs\OnlineProtocolP2.hpp">
+      <Filter>Header Files\OfflineOnline\specs</Filter>
+    </ClInclude>
+    <ClInclude Include="include\primitives\CircuitOutput.hpp">
+      <Filter>Header Files\primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OfflineOnline\subroutines\OnlineComputeRoutine.hpp">
+      <Filter>Header Files\OfflineOnline\subroutines</Filter>
+    </ClInclude>
+    <ClInclude Include="include\primitives\SeededRandomnessProvider.hpp">
+      <Filter>Header Files\primitives</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

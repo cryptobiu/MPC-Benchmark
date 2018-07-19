@@ -1,0 +1,35 @@
+./run_protocol.sh 0 0 NigelAes3Parties.txt Parties AesInputs0.txt 2 5
+./run_protocol.sh 0 0 NigelAes3Parties.txt Parties AesInputs0.txt 4 5
+
+./run_protocol.sh 0 0 NigelAes5Parties.txt Parties AesInputs0.txt 4 5
+./run_protocol.sh 0 0 NigelAes5Parties.txt Parties AesInputs0.txt 8 5
+
+./run_protocol.sh 0 0 NigelAes7Parties.txt Parties AesInputs0.txt 6 5
+./run_protocol.sh 0 0 NigelAes7Parties.txt Parties AesInputs0.txt 12 5
+
+./run_protocol.sh 0 0 NigelAes9Parties.txt Parties AesInputs0.txt 8 5
+./run_protocol.sh 0 0 NigelAes9Parties.txt Parties AesInputs0.txt 16 5
+
+./run_protocol.sh 0 0 NigelAes3Parties.txt Parties AesInputs0.txt 2 4
+./run_protocol.sh 0 0 NigelAes3Parties.txt Parties AesInputs0.txt 4 4
+
+./run_protocol.sh 0 0 NigelAes5Parties.txt Parties AesInputs0.txt 4 4
+./run_protocol.sh 0 0 NigelAes5Parties.txt Parties AesInputs0.txt 8 4
+
+./run_protocol.sh 0 0 NigelAes7Parties.txt Parties AesInputs0.txt 6 4
+./run_protocol.sh 0 0 NigelAes7Parties.txt Parties AesInputs0.txt 12 4
+
+./run_protocol.sh 0 0 NigelAes9Parties.txt Parties AesInputs0.txt 8 4
+./run_protocol.sh 0 0 NigelAes9Parties.txt Parties AesInputs0.txt 16 4
+
+./run_protocol.sh 0 0 NigelAes3Parties.txt Parties AesInputs0.txt 2 3
+./run_protocol.sh 0 0 NigelAes3Parties.txt Parties AesInputs0.txt 4 3
+
+./run_protocol.sh 0 0 NigelAes5Parties.txt Parties AesInputs0.txt 4 3
+./run_protocol.sh 0 0 NigelAes5Parties.txt Parties AesInputs0.txt 8 3
+
+./run_protocol.sh 0 0 NigelAes7Parties.txt Parties AesInputs0.txt 6 3
+./run_protocol.sh 0 0 NigelAes7Parties.txt Parties AesInputs0.txt 12 3
+
+./run_protocol.sh 0 0 NigelAes9Parties.txt Parties AesInputs0.txt 8 3
+./run_protocol.sh 0 0 NigelAes9Parties.txt Parties AesInputs0.txt 16 3

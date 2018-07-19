@@ -1,0 +1,6 @@
+party_1_ip = 127.0.0.1
+party_2_ip = 127.0.0.1
+party_1_port = 8000
+party_2_port = 8001
+malicious_OT_address = 127.0.0.1
+malicious_OT_port = 7766
