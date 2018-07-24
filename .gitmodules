@@ -1,0 +1,3 @@
+[submodule "HyperMPC"]
+	path = HyperMPC
+	url = https://github.com/cryptobiu/HyperMPC
