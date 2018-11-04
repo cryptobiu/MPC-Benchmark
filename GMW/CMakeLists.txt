@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 project(GMW)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -std=c++11 -maes -mpclmul -fPIC")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O3 -std=c++11 -maes -mpclmul -fPIC -no-pie")
 
 
 INCLUDE_DIRECTORIES($ENV{HOME} ${BOOST_INCLUDEDIR} $ENV{HOME}
@@ -16,5 +16,4 @@ add_executable(GMW ${SOURCE_FILES})
 TARGET_LINK_LIBRARIES(GMW $ENV{HOME}/libscapi/libscapi.a gmp
         OTExtensionBristol
         $ENV{HOME}/libscapi/install/lib/libsimpleot.a
-        $ENV{HOME}/libscapi/install/lib/libjsoncpp.a
-        libboost_system.a libboost_thread.a pthread crypto dl ssl z )
+        libboost_system.a libboost_thread.a pthread crypto dl ssl z)
