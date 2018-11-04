@@ -1,0 +1,68 @@
+number_of_iterations = 1000
+print_output = false
+input_section = AES 
+circuit_type = NoFixedKey
+
+# OS name is added automatically
+[AES-Linux]
+circuit_file = NigelAes.txt
+input_file_party_1 = AesInputs1.txt
+input_file_party_2 = AesInputs2.txt
+
+[SHA1-Linux]
+circuit_file = ../../samples/assets/circuits/SHA1/NigelSHA1.txt
+input_file_party_1 = ../../samples/assets/circuits/SHA1/SHA1PartyOneInputs.txt
+input_file_party_2 = ../../samples/assets/circuits/SHA1/SHA1PartyTwoInputs.txt
+
+[SHA256-Linux]
+circuit_file = ../../samples/assets/circuits/SHA256/NigelSHA256.txt
+input_file_party_1 = ../../samples/assets/circuits/SHA256/SHA256PartyOneInputs.txt
+input_file_party_2 = ../../samples/assets/circuits/SHA256/SHA256PartyTwoInputs.txt
+
+[ADD-Linux]
+circuit_file = ../../samples/assets/circuits/ADD/NigelAdd32.txt
+input_file_party_1 = ../../samples/assets/circuits/ADD/ADDPartyOneInputs.txt
+input_file_party_2 = ../../samples/assets/circuits/ADD/ADDPartyTwoInputs.txt
+
+[AES-Windows]
+circuit_file = ../../../../samples/assets/circuits/AES/NigelAes.txt
+input_file_party_1 = ../../../../samples/assets/circuits/AES/AESPartyOneInputs.txt
+input_file_party_2 = ../../../../samples/assets/circuits/AES/AESPartyTwoInputs.txt
+
+[SHA1-Windows]
+circuit_file = ../../../../samples/assets/circuits/SHA1/NigelSHA1.txt
+input_file_party_1 = ../../../../samples/assets/circuits/SHA1/SHA1PartyOneInputs.txt
+input_file_party_2 = ../../../../samples/assets/circuits/SHA1/SHA1PartyTwoInputs.txt
+
+[SHA256-Windows]
+circuit_file = ../../../../samples/assets/circuits/SHA256/NigelSHA256.txt
+input_file_party_1 = ../../../../samples/assets/circuits/SHA256/SHA256PartyOneInputs.txt
+input_file_party_2 = ../../../../samples/assets/circuits/SHA256/SHA256PartyTwoInputs.txt
+
+[ADD-Windows]
+circuit_file = ../../../../samples/assets/circuits/ADD/NigelAdd32.txt
+input_file_party_1 = ../../../../samples/assets/circuits/ADD/ADDPartyOneInputs.txt
+input_file_party_2 = ../../../../samples/assets/circuits/ADD/ADDPartyTwoInputs.txt
+
+[AESEXP-Windows]
+circuit_file = C:\code\libscapi\samples\assets\circuits\AESMULT/NigelAesExpanded.txt
+input_file_party_1 = C:\code\libscapi\samples\assets\circuits\AESMULT/AesExpandedPartyOneInputs.txt
+input_file_party_2 = C:\code\libscapi\samples\assets\circuits\AESMULT/AesExpandedPartyTwoInputs.txt
+
+[AESMULT-Windows]
+circuit_file = C:\code\libscapi\samples\assets\circuits\AESMULT/NigelAesExpandedMultiple.txt
+input_file_party_1 = C:\code\libscapi\samples\assets\circuits\AESMULT/AesExpandedMultPartyOneInputs.txt
+input_file_party_2 = C:\code\libscapi\samples\assets\circuits\AESMULT/AesExpandedPartyTwoInputs.txt
+
+[AESMULT128-Windows]
+circuit_file = C:\code\libscapi\samples\assets\circuits\AESMULT/NigelAesMultiple.txt
+input_file_party_1 = C:\code\libscapi\samples\assets\circuits\AESMULT/AESPartyOneInputs.txt
+input_file_party_2 = C:\code\libscapi\samples\assets\circuits\AESMULT/AESPartyTwoInputs.txt
+
+
+[DEP-Windows]
+circuit_file = C:\cryptobiu\YaoProtocol/C1000GatesWith500Depth.txt
+input_file_party_1 = C:\cryptobiu\YaoProtocol/C1000GatesWith500DepthPartyOneInputs.txt
+input_file_party_2 = C:\cryptobiu\YaoProtocol/C1000GatesWith500DepthPartyTwoInputs.txt
+
+
