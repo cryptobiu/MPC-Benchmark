@@ -1,5 +1,15 @@
+./idea
+CMakeFiles/
+CMakeCache.txt
+cmake-build-debug/
+
 GMW/.idea/
 GMW/cmake-build-debug/
+GMW/CMakeCache.txt
+GMW/CMakeFiles
+GMW/Makefile
+GMW/cmake_install.cmake
+
 ReplicatedSecretSharing3PartiesArithmetic/.idea/
 ReplicatedSecretSharing3PartiesArithmetic/CMakeCache.txt
 ReplicatedSecretSharing3PartiesArithmetic/CMakeFiles/
