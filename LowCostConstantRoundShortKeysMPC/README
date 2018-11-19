@@ -1,0 +1,55 @@
+/**
+* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+*
+* Copyright (c) 2016 LIBSCAPI (http://crypto.biu.ac.il/SCAPI)
+* This file is part of the SCAPI project.
+* DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+*
+* Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"),
+* to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+* and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+*
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+* FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+* WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*
+* We request that any publication and/or code referring to and/or based on SCAPI contain an appropriate citation to SCAPI, including a reference to
+* http://crypto.biu.ac.il/SCAPI.
+*
+* Libscapi uses several open source libraries. Please see these projects for any further licensing issues.
+* For more information , See https://github.com/cryptobiu/libscapi/blob/master/LICENSE.MD
+*
+* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+*
+*/
+
+INTRODUCTION
+------------
+
+This package contains an implementation of the Low Cost Constant Round Short Keys MPC protocol.
+
+A general explanation of the protocol can be found at
+
+
+
+INSTALLATION AND EXECUTION
+--------------------------
+
+In order to compile and run The LowCostConstantRoundShortKeysMPC application:
+1. Go in the LowConstConstantRoundShortKeysMPC directory.
+2. Run the cmake . command.
+3. Run the make command.
+4. to execute run :
+
+./LowCostConstantRoundShortKeysMPC -partyID [party_id] -circuitFile [circuit_file_name] -partiesFile [parties_file_name]
+                            -inputsFile [input_file_name] -otherInputsFile [other_input_file_name] -keySize [key_size]
+                            -isLookup [is_lookup] -internalIterationsNumber [internal_iterations_number]
+
+ for example:
+ ./LowCostConstantRoundShortKeysMPC -partyID 0 -circuitFile AES_splitters_scapi_5Parties.txt -partiesFile Parties
+                                    -inputsFile AesInputs0.txt -otherInputsFile AesInputs1.txt -keySize 8
+                                    -isLookup false -internalIterationsNumber 10
+
+ This executes party number 0 of protocol.
