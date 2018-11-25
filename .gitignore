@@ -17,4 +17,6 @@ ReplicatedSecretSharing3PartiesArithmetic/Makefile
 ReplicatedSecretSharing3PartiesArithmetic/ReplicatedSecretSharing3PartiesArithmetic
 ReplicatedSecretSharing3PartiesArithmetic/cmake-build-debug/
 ReplicatedSecretSharing3PartiesArithmetic/cmake_install.cmake
-
+*.xml
+*.cbp
+*.json
