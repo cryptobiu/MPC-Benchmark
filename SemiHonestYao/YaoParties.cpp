@@ -46,8 +46,7 @@ vector<byte> readInputAsVector(string input_file, int numInputs) {
 /*          PartyOne             */
 /*********************************/
 
-PartyOne::PartyOne(int argc, char* argv[]) : Protocol("SemiHonestYao", argc, argv) {
-	//t = boost::thread(boost::bind(&boost::asio::io_service::run, &io_service));
+PartyOne::PartyOne(int argc, char* argv[]) : MPCProtocol("SemiHonestYao", argc, argv) {
 	id = stoi(this->getParser().getValueByKey(arguments, "partyID"));
 
 
@@ -58,22 +57,13 @@ PartyOne::PartyOne(int argc, char* argv[]) : Protocol("SemiHonestYao", argc, arg
 	ConfigFile cf(this->getParser().getValueByKey(arguments, "partiesFile"));
 
 	string receiver_ip, sender_ip;
-	int receiver_port, sender_port;
+	int sender_port;
 
-	//get partys IPs and ports data
+//	//get partys IPs and ports data
 	sender_port = stoi(cf.Value("", "party_0_port"));
 	sender_ip = cf.Value("", "party_0_ip");
-	receiver_port = stoi(cf.Value("", "party_1_port"));
-	receiver_ip = cf.Value("", "party_1_ip");
 
-	cout<<"sender ip: "<<sender_ip <<"port:"<<sender_port<<endl;
-	cout<<"receiver ip: "<<receiver_ip<<"port:"<<receiver_port<<endl;
-	SocketPartyData me(IpAddress::from_string(sender_ip), sender_port++);
-
-	SocketPartyData other(IpAddress::from_string(receiver_ip), receiver_port);
-	cout<<"my ip: "<<me.getIpAddress() <<"port:"<<me.getPort()<<endl;
-	cout<<"other ip: "<<other.getIpAddress() <<"port:"<<other.getPort()<<endl;
-	channel = make_shared<CommPartyTCPSynced>(io_service, me, other);
+	channel = parties[1];
 
 	// create the garbled circuit
 #ifdef NO_AESNI
@@ -85,7 +75,7 @@ PartyOne::PartyOne(int argc, char* argv[]) : Protocol("SemiHonestYao", argc, arg
 
 	setInputs(yao_config.input_file_1, circuit->getNumberOfInputs(1));
     // create the semi honest OT extension sender
-	SocketPartyData senderParty(IpAddress::from_string(sender_ip), sender_port);
+	SocketPartyData senderParty(IpAddress::from_string(sender_ip), sender_port+1);
 	cout<<"sender ip: "<<senderParty.getIpAddress() <<"port:"<<senderParty.getPort()<<endl;
 #ifdef _WIN32
 	otSender = new OTSemiHonestExtensionSender(senderParty, 163, 1);
@@ -98,8 +88,6 @@ PartyOne::PartyOne(int argc, char* argv[]) : Protocol("SemiHonestYao", argc, arg
     #endif
 #endif
 
-	// connect to party two
-	channel->join(500, 5000);
 };
 
 void PartyOne::setInputs(string inputFileName, int numInputs) {
@@ -123,13 +111,6 @@ void PartyOne::sendP1Inputs(byte* ungarbledInput) {
 	// send the keys to p2.
 	channel->write(p1Inputs, inputsSize);
 	delete p1Inputs;
-}
-
-void PartyOne::run() {
-	for (currentIteration = 0; currentIteration<yaoConfig.number_of_iterations; currentIteration++){
-		runOnline();
-	}
-
 }
 
 void PartyOne::runOnline() {
@@ -176,7 +157,7 @@ void PartyOne::runOTProtocol() {
 /*          PartyTwo             */
 /*********************************/
 
-PartyTwo::PartyTwo(int argc, char* argv[]) : Protocol("SemiHonestYao", argc, argv){
+PartyTwo::PartyTwo(int argc, char* argv[]) : MPCProtocol("SemiHonestYao", argc, argv){
 
 	id = stoi(this->getParser().getValueByKey(arguments, "partyID"));
 
@@ -189,19 +170,13 @@ PartyTwo::PartyTwo(int argc, char* argv[]) : Protocol("SemiHonestYao", argc, arg
 	ConfigFile cf(this->getParser().getValueByKey(arguments, "partiesFile"));
 	
 	string receiver_ip, sender_ip;
-	int receiver_port, sender_port;
+	int sender_port;
 
 	//get partys IPs and ports data
 	sender_port = stoi(cf.Value("", "party_0_port"));
 	sender_ip = cf.Value("", "party_0_ip");
-	receiver_port = stoi(cf.Value("", "party_1_port"));
-	receiver_ip = cf.Value("", "party_1_ip");
 
-	SocketPartyData me(IpAddress::from_string(receiver_ip), receiver_port);
-
-	SocketPartyData other(IpAddress::from_string(sender_ip), sender_port++);
-	channel = make_shared<CommPartyTCPSynced>(io_service, me, other);
-
+	channel = parties[0];
 	// create the garbled circuit
 #ifdef NO_AESNI
     circuit = new GarbledBooleanCircuitNoIntrinsics(yao_config.circuit_file.c_str());
@@ -211,7 +186,7 @@ PartyTwo::PartyTwo(int argc, char* argv[]) : Protocol("SemiHonestYao", argc, arg
 #endif
 	setInputs(yao_config.input_file_2,  circuit->getNumberOfInputs(2));
 	// create the OT receiver.
-	SocketPartyData senderParty(IpAddress::from_string(sender_ip), sender_port);
+	SocketPartyData senderParty(IpAddress::from_string(sender_ip), sender_port+1);
 #ifdef _WIN32
 	otReceiver = new OTSemiHonestExtensionReceiver(senderParty, 163, 1);
 #else
@@ -224,9 +199,6 @@ PartyTwo::PartyTwo(int argc, char* argv[]) : Protocol("SemiHonestYao", argc, arg
 
 #endif
 
-
-	// connect to party one
-	channel->join(500, 5000);
 }
 
 void PartyTwo::setInputs(string inputFileName, int numInputs) {
@@ -256,12 +228,6 @@ void PartyTwo::computeCircuit(OTBatchROutput * otOutput) {
 	// translate the result from compute.
 	circuitOutput.resize(circuit->getNumberOfOutputs());
 	circuit->translate(garbledOutput, circuitOutput.data());
-}
-
-void PartyTwo::run() {
-	for (currentIteration = 0; currentIteration<yaoConfig.number_of_iterations; currentIteration++){
-		runOnline();
-	}
 }
 
 void PartyTwo::runOnline() {
@@ -296,15 +262,6 @@ void PartyTwo::receiveCircuit() {
 	channel->read(translationTable, circuit->getNumberOfOutputs());
 	std::vector<byte> translationTableVec(translationTable, translationTable + circuit->getNumberOfOutputs());
 	
-	// set garbled tables and translation table to the circuit.
-
-	//TODO MEITAL remove after the comm layer changes
-	//block* garbledTabledAligned = (block *)_aligned_malloc(circuit->getGarbledTableSize(), SIZE_OF_BLOCK);
-
-	//copy to the aligned memory
-	//memcpy(garbledTabledAligned, garbledTables, circuit->getGarbledTableSize());
-
-	//circuit->setGarbledTables((block*)garbledTables);
 	circuit->setTranslationTable(translationTableVec);
 }
 

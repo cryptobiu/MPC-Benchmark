@@ -64,28 +64,22 @@
 
 
 struct YaoConfig {
-	int number_of_iterations;
 	bool print_output;
 	string circuit_type;
 	string circuit_file;
 	string input_file_1;
 	string input_file_2;
 	IpAddress sender_ip;
-	IpAddress receiver_ip;
 	int sender_port;
-	int receiver_port;
-	YaoConfig(int n_iterations, bool print, string c_file, string input_file_1,
-		string input_file_2, string sender_ip_str, int sender_port, string rec_ip_str, int receiver_port, string circuit_type) {
-		number_of_iterations = n_iterations;
+	YaoConfig(bool print, string c_file, string input_file_1,
+		string input_file_2, string sender_ip_str, int sender_port, string circuit_type) {
 		print_output = print;
 		circuit_file = c_file;
 		this->input_file_1 = input_file_1;
 		this->input_file_2 = input_file_2;
 		sender_ip = IpAddress::from_string(sender_ip_str);
-		receiver_ip = IpAddress::from_string(rec_ip_str);
 		this->circuit_type = circuit_type;
 		this->sender_port = sender_port;
-		this->receiver_port = receiver_port;
 	};
 
 	YaoConfig(string config_file) {
@@ -96,7 +90,6 @@ struct YaoConfig {
 #endif
 		ConfigFile cf(config_file);
 		cout<<"after config file"<<endl;
-		number_of_iterations = stoi(cf.Value("", "number_of_iterations"));
 		string str_print_output = cf.Value("", "print_output");
 		istringstream(str_print_output) >> std::boolalpha >> print_output;
 		string input_section = cf.Value("", "input_section") + "-" + os;
@@ -112,12 +105,10 @@ struct YaoConfig {
 /**
 * This is an implementation of party one of Yao protocol.
 */
-class PartyOne : public Protocol, public SemiHonest, public TwoParty{
+class PartyOne : public MPCProtocol, public SemiHonest, public TwoParty{
 private:
 	int id;
-	boost::asio::io_service io_service;
 	OTBatchSender * otSender;			//The OT object that used in the protocol.
-	int currentIteration;
 
 #ifdef NO_AESNI
 	GarbledBooleanCircuitNoIntrinsics * circuit;	//The garbled circuit used in the protocol.
@@ -171,18 +162,13 @@ public:
 		delete circuit;
 		delete otSender;
 
-		io_service.stop();
+
 	}
 
 	void setInputs(string inputFileName, int numInputs);
 
     bool hasOffline() override { return false; }
     bool hasOnline() override { return true; }
-
-	/**
-	* Runs the protocol.
-	*/
-	void run() override;
 
     void runOnline() override;
 
@@ -194,11 +180,10 @@ public:
 /**
 * This is an implementation of party one of Yao protocol.
 */
-class PartyTwo : public Protocol, public SemiHonest, public TwoParty{
+class PartyTwo : public MPCProtocol, public SemiHonest, public TwoParty{
 private:
 	int id;
-	boost::asio::io_service io_service;
-	OTBatchReceiver * otReceiver;			//The OT object that used in the protocol.	
+	OTBatchReceiver * otReceiver;			//The OT object that used in the protocol.
 #ifdef NO_AESNI
 	GarbledBooleanCircuitNoIntrinsics * circuit;	//The garbled circuit used in the protocol.
 #else
@@ -212,7 +197,6 @@ private:
 	vector<byte> circuitOutput;
 	vector<byte> ungarbledInput;
 	YaoConfig yaoConfig;
-	int currentIteration;
 	
 	/**
 	* Compute the garbled circuit.
@@ -257,19 +241,13 @@ public:
 	~PartyTwo() {
 		delete circuit;
 		delete otReceiver;
-		io_service.stop();
+
 	}
 
 	void setInputs(string inputFileName, int numInputs);
 
 	bool hasOffline() override { return false; }
 	bool hasOnline() override { return true; }
-
-	/**
-	* Runs the protocol.
-	* @param ungarbledInput The input for the circuit, each p1's input wire gets 0 or 1.
-	*/
-	void run() override;
 
     void runOnline() override;
 

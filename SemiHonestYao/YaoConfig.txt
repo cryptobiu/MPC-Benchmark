@@ -1,4 +1,3 @@
-number_of_iterations = 1000
 print_output = false
 input_section = AES 
 circuit_type = NoFixedKey
