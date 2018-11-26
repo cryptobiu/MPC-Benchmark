@@ -1,5 +1,5 @@
 #include <iostream>
-#include "BCast.h"
+#include "ExampleProtocol.h"
 
 using namespace std;
 
@@ -7,8 +7,8 @@ using namespace std;
 int main(int argc, char* argv[])
 {
 
-    BCast bCast(argc, argv);
-    bCast.run();
+    ExampleProtocol p(argc, argv);
+    p.run();
 
     return 0;
 }

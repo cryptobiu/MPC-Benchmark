@@ -21,10 +21,10 @@ using random_bytes_engine = std::independent_bits_engine<
 
 
 
-class BCast :public MPCProtocol, public MultiParty {
+class ExampleProtocol :public MPCProtocol, public MultiParty {
 
 public:
-    BCast(int argc, char* argv []);
+    ExampleProtocol(int argc, char* argv []);
 
     bool hasOnline() { return true; }
     bool hasOffline()  { return false; }

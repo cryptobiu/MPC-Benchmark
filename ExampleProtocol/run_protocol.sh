@@ -11,6 +11,6 @@
 
 for party_idx in `seq ${1} 1 ${2}`;
 do
-    ./BCast -partyID ${party_idx} -partiesNumber ${3} -partiesFile ${4} -D ${5} -internalIterationsNumber ${6} -numThreads ${7} &
+    ./ExampleProtocol -partyID ${party_idx} -partiesNumber ${3} -partiesFile ${4} -D ${5} -internalIterationsNumber ${6} -numThreads ${7} &
     echo "running ${party_idx}"
 done

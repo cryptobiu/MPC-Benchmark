@@ -2,11 +2,11 @@
 // Created by moriya on 04/01/17.
 //
 
-#include "BCast.h"
+#include "ExampleProtocol.h"
 
 using namespace std;
 
-BCast::BCast(int argc, char* argv []): MPCProtocol("BCast", argc, argv) {
+ExampleProtocol::ExampleProtocol(int argc, char* argv []): MPCProtocol("ExampleProtocol", argc, argv) {
 
     vector<string> names{"TestComm"};
     timer->addTaskNames(names);
@@ -20,14 +20,14 @@ BCast::BCast(int argc, char* argv []): MPCProtocol("BCast", argc, argv) {
 
 
 
-void BCast::createData()
+void ExampleProtocol::createData()
 {
     random_bytes_engine rbe;
     m_data.resize(m_d);
     generate(begin(m_data), end(m_data), ref(rbe));
 }
 
-void BCast::runOnline()
+void ExampleProtocol::runOnline()
 {
     vector<byte> data(numParties*m_d); // save data from other parties
 
