@@ -2,7 +2,7 @@
 // Created by moriya on 24/04/17.
 //
 
-#include "LowCostConstantRoundMPC/include/Utils.hpp"
+#include "../include/Utils.hpp"
 
 Utils::Utils(){
     hashSize = 32;

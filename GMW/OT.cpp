@@ -2,7 +2,7 @@
 // Created by moriya on 04/01/17.
 //
 
-#include "MPCCommunication.h"
+#include "OT.hpp"
 
 
 vector<shared_ptr<ProtocolPartyData>> MPCCommunication::setCommunication(boost::asio::io_service & io_service, int id, int numParties, string configFile) {

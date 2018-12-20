@@ -6,11 +6,7 @@
 #define GMW_MPCCOMMUNICATION_H
 
 #include "../../include/interactive_mid_protocols/OTBatch.hpp"
-#ifndef _WIN32
-	#include "../../include/interactive_mid_protocols/OTExtensionBristol.hpp"
-#else
-	#include "../../include/interactive_mid_protocols/OTSemiHonestExtension.hpp"
-#endif
+#include "../../include/interactive_mid_protocols/OTExtensionBristol.hpp"
 
 class ProtocolPartyData {
 private:
