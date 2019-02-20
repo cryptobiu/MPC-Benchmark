@@ -8,11 +8,10 @@
 #include "libOTe/TwoChooseOne/KosDotExtSender.h"
 #include "MPCCommunication.hpp"
 #include <libscapi/include/primitives/Prg.hpp>
-//#include <openssl/evp.h>
 #include <BLAKE2/sse/blake2.h>
 
 using namespace std;
-#define K 128
+#define K__ 128
 #define NUM_BYTES 16
 #define bitVector osuCrypto::BitVector
 
@@ -115,7 +114,7 @@ public:
      * @param elementSize size of each sampled elements, in bits
      * @return the samples elements
      */
-    vector<vector<byte>> coinTossing(int numElements = 1, int elementSize = K);
+    vector<vector<byte>> coinTossing(int numElements = 1, int elementSize = K__);
 
     /**
      * Commitments can be done similarly using a hash function:

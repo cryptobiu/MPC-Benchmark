@@ -1,14 +1,14 @@
 #pragma once
 
-#include <NTL/ZZ_p.h>
 #include <cmath>
+#include <NTL/ZZ_p.h>
+
 #include <libscapi/include/primitives/Prg.hpp>
 #include <libscapi/include/cryptoInfra/Protocol.hpp>
-#include <libscapi/include/infra/Measurement.hpp>
-#include "Circuit.hpp"
-#include "MPCCommunication.hpp"
+
 #include "TinyOT.hpp"
 #include "Utils.hpp"
+#include "Circuit.hpp"
 
 #include "libOTe/Tools/Tools.h"
 #include "libOTe/Tools/LinearCode.h"
@@ -18,7 +18,7 @@ using namespace NTL;
 /**
  * This class represents a party in the Low cost constant round MPC combining BMR and ot protocol.
  */
-class Party : public Protocol, DisHonestMajority, MultiParty{
+class Party : public MPCProtocol, DisHonestMajority, MultiParty{
 
 private:
     int id;                         //Each party gets unique id number
@@ -41,7 +41,7 @@ private:
     osuCrypto::IOService ios_ot;             //used in LibOTe communication
     vector<ProtocolPartyData*> parties;      //The communication data.
 
-    Measurement* timer;
+    Measurement* measurement;
     PrgFromOpenSSLAES prg;                   //Used in the protocol in order to get random bytes
     EVP_CIPHER_CTX* aes;                     //Used in the protocol in order to encrypt data
     const EVP_CIPHER* cipher;

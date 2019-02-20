@@ -71,7 +71,7 @@ void TinyOT::init(int id, PrgFromOpenSSLAES * prg, const vector<ProtocolPartyDat
     R = prg->getRandom128();
 
 
-    osuCrypto::BitVector r((byte*)&R, K);
+    osuCrypto::BitVector r((byte*)&R, K__);
 
     //2. Every ordered pair (pi, pj) calls correlated OT, where pi sends (init, R) and pj sends (init)
     initCot(r);
@@ -144,18 +144,18 @@ void TinyOT::computeBaseOT(const bitVector & r, int first, int last){
 vector<Sharing*> TinyOT::bits(int m){
     //Bits:
     //1. Each party samples m+k random bits b1, ..., bm, r1, ..., rk <-{0, 1}
-    int mAndKbytes = ((m + K) % 8 == 0 ? (m+K)/8 : (m+K)/8 + 1);
+    int mAndKbytes = ((m + K__) % 8 == 0 ? (m+K__)/8 : (m+K__)/8 + 1);
     vector<byte> temp(mAndKbytes);
     prg->getPRGBytes(temp, 0, mAndKbytes);
 
-    bitVector bits(temp.data(), m+K);
+    bitVector bits(temp.data(), m+K__);
 
     //2. Every ordered pair (pi, pj) calls correlated OT, where pi is receiver and inputs (extends, b1, ..., bm, r1, ..., rk)
     //3. Use the previous outputs to define sharings [b1], ..., [bm], [r1], ..., [rk]
 
-    bitsSharing = (block*) _mm_malloc(2*(m+K)*(numParties - 1)*NUM_BYTES, 32);
-    auto sharings = allocateSharingsMemory(m+K, numParties - 1, bitsSharing);
-    computeSharings(bits, m+K, sharings);
+    bitsSharing = (block*) _mm_malloc(2*(m+K__)*(numParties - 1)*NUM_BYTES, 32);
+    auto sharings = allocateSharingsMemory(m+K__, numParties - 1, bitsSharing);
+    computeSharings(bits, m+K__, sharings);
 
     //4. Check consistency of the Fcot inputs as follows:
     //(a) Call Frand to obtain random field elements χ1, . . . , χm ∈ F2κ
@@ -206,7 +206,7 @@ vector<Sharing*> TinyOT::bits(int m){
     }
 
     block x = _mm_set_epi32(0, 0, 0, 1);
-    for (int i=m; i<m+K; i++){
+    for (int i=m; i<m+K__; i++){
         //Calculate [r_i] * Xi-1
         b = sharings[i];
 

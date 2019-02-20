@@ -160,7 +160,7 @@ vector<vector<byte>> Utils::coinTossing(int numElements, int elementSize){
     vector<byte> expandedOutput(numElements*elementBytes);
 
     //If the necessary bits is bigger than the sampled, expand them using a prg.
-    if (numElements*elementSize > K){
+    if (numElements*elementSize > K__){
         PrgFromOpenSSLAES expandPRG(numElements*elementBytes);
         SecretKey key((byte*)&xoredSeed, NUM_BYTES, "");
         expandPRG.setKey(key);

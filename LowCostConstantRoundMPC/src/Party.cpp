@@ -1,17 +1,18 @@
 #include "../include/Party.hpp"
 
-Party::Party(int argc, char* argv[])//int id, Circuit* circuit, string partiesFile, int numThreads, ofstream * outputFile, int B)
-        : Protocol("LowCostConstantRoundMPC", argc, argv){//id(id), circuit(circuit), numThreads(numThreads) {
+Party::Party(int argc, char* argv[])
+    : MPCProtocol("LowCostConstantRoundMPC", argc, argv)
+    {
 
     id = stoi(this->getParser().getValueByKey(arguments, "partyID"));
     circuit.readCircuit(this->getParser().getValueByKey(arguments, "circuitFile").c_str());
     numThreads = stoi(this->getParser().getValueByKey(arguments, "numThreads"));
     times = stoi(this->getParser().getValueByKey(arguments, "internalIterationsNumber"));
 
-    vector<string> subTaskNames{"Preprocess", "Bits generation", "Triples generation", "Generate masks and keys", "Secure product computation",
+    vector<string> subTaskNames{"Preprocess", "Bits generation", "Triples Generation", "Generate masks and keys",
+                                "Secure product computation", "Offline",
                                 "Garbled circuit generation", "Reveal outputs", "Reveal inputs", "Open garble", "Online"};
-    timer = new Measurement("LowcostConstantRoundMPC", id, circuit.getNrOfParties(),
-            times, this->getParser().getValueByKey(arguments, "partiesFile"));
+    this->timer->addTaskNames(subTaskNames);
     //Print performance of each function to an output file
     string outputName = "Output" +this->getParser().getValueByKey(arguments, "partyID")
             + "_" + this->getParser().getValueByKey(arguments, "circuitFile") + "_Threads="
@@ -21,10 +22,6 @@ Party::Party(int argc, char* argv[])//int id, Circuit* circuit, string partiesFi
     outputFile.open (outputName);
     outputFile << "Performance:"<<endl;
     outputFile << "Bits generation, Triples generation, Generate masks and keys, Secure product computation, Garbled circuit generation, Reveal outputs, Reveal inputs, Open garble, Total offline phase, Online phase"<<endl;
-
-    //create the communication channels between all the parties
-    parties = MPCCommunication::setCommunication(io_service, ios_ot, id, circuit.getNrOfParties(),
-            this->getParser().getValueByKey(arguments, "partiesFile"));
 
     numParties = parties.size() + 1;
     auto key = prg.generateKey(128);
@@ -96,9 +93,9 @@ void Party::run() {
         //offline phase
         initTimes();
         start = chrono::high_resolution_clock::now();
-        timer->startSubTask(0, iteration);
+        timer->startSubTask("Offline", iteration);
         runOffline();
-        timer->endSubTask(0, iteration);
+        timer->endSubTask("Offline", iteration);
         end = chrono::high_resolution_clock::now();
         auto offlineTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
         outputFile << offlineTime << ",";
@@ -107,9 +104,9 @@ void Party::run() {
 
         //online phase
         start = chrono::high_resolution_clock::now();
-        timer->startSubTask("Offline", iteration);
+        timer->startSubTask("Online", iteration);
         runOnline();
-        timer->endSubTask("Offline", iteration);
+        timer->endSubTask("Online", iteration);
         end = chrono::high_resolution_clock::now();
         auto onlineTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
         allOnlineTime += onlineTime;
