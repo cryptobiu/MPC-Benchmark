@@ -7,9 +7,9 @@
 
 #include <libscapi/include/cryptoInfra/Protocol.hpp>
 #include <libscapi/include/cryptoInfra/SecurityLevel.hpp>
-#include <libscapi/include/infra/CircuitConverter.hpp>
-#include <libscapi/include/infra/ConfigFile.hpp>
 #include <libscapi/lib/EMP/emp-m2pc/malicious/malicious.h>
+#include <libscapi/tools/circuits/scapiBristolConverter/CircuitConverter.hpp>
+#include <libscapi/include/infra/ConfigFile.hpp>
 #include <libscapi/include/infra/Measurement.hpp>
 #include <fstream>
 
