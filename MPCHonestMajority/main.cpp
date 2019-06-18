@@ -148,8 +148,8 @@ int main(int argc, char* argv[])
 
     CmdParser parser;
     auto parameters = parser.parseArguments("", argc, argv);
-    int times = stoi(parameters["internalIterationsNumber"]);
-    string fieldType(parameters["fieldType"]);
+    int times = stoi(parser.getValueByKey(parameters, "internalIterationsNumber"));
+    string fieldType(parser.getValueByKey(parameters, "fieldType"));
 
     if(fieldType.compare("ZpMersenne") == 0)
     {

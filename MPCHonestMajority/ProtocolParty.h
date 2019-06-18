@@ -33,7 +33,7 @@ using namespace std;
 using namespace std::chrono;
 
 template <class FieldType>
-class ProtocolParty : public Protocol, HonestMajority, MultiParty{
+class ProtocolParty : public MPCProtocol, HonestMajority{
 
 public:
     int N, M, T, m_partyId;
@@ -50,7 +50,6 @@ private:
      */
 
     string genRandomSharesType, multType, verifyType;
-    ProtocolTimer* protocolTimer;
     int currentCirciutLayer = 0;
 
     string s;
@@ -352,14 +351,13 @@ public:
 
 
 template <class FieldType>
-ProtocolParty<FieldType>::ProtocolParty(int argc, char* argv[]) : Protocol("MPCHonestMajority", argc, argv) {
+ProtocolParty<FieldType>::ProtocolParty(int argc, char* argv[]) : MPCProtocol("MPCHonestMajority", argc, argv) {
 
-    this->genRandomSharesType = arguments["genRandomSharesType"];
-    this->multType = arguments["multType"];
-    this->verifyType = arguments["verifyType"];
-
-    this->times = stoi(arguments["internalIterationsNumber"]);
-    //honestMult = new GRRHonestMult<FieldType>();
+    CmdParser parser = this->getParser();
+    this->genRandomSharesType = parser.getValueByKey(arguments, "genRandomSharesType");
+    this->multType = parser.getValueByKey(arguments, "multType");
+    this->verifyType = parser.getValueByKey(arguments, "verifyType");
+    this->times = stoi(parser.getValueByKey(arguments, "internalIterationsNumber"));
 
     if(multType=="GRR"){
         honestMult = new GRRHonestMult<FieldType>(this);
@@ -371,11 +369,8 @@ ProtocolParty<FieldType>::ProtocolParty(int argc, char* argv[]) : Protocol("MPCH
             honestMult = new DNHonestMult<FieldType>(0, this);
     }
 
-    string outputTimerFileName = arguments["circuitFile"] + "Times" + arguments["partyID"] + arguments["fieldType"]
-                                 + arguments["genRandomSharesType"] + arguments["multType"] + arguments["verifyType"] + ".csv";
-    this->protocolTimer = new ProtocolTimer(times, outputTimerFileName);
 
-    string fieldType = arguments["fieldType"];
+    string fieldType = parser.getValueByKey(arguments, "fieldType");
     if(fieldType.compare("ZpMersenne") == 0) {
         field = new TemplateField<FieldType>(2147483647);
     } else if(fieldType.compare("ZpMersenne61") == 0) {
@@ -388,21 +383,22 @@ ProtocolParty<FieldType>::ProtocolParty(int argc, char* argv[]) : Protocol("MPCH
         field = new TemplateField<FieldType>(2147483647);
     }
 
-    N = stoi(arguments["numParties"]);
+    N = stoi(parser.getValueByKey(arguments, "numParties"));
 
     T = N/2 - 1;
-    //T = n/3 - 1;
-    this->inputsFile = arguments["inputsFile"];
-    this->outputFile = arguments["outputsFile"];
-    if(N%2 > 0)
-    {
+    string inputFileName = parser.getValueByKey(arguments, "inputsFile");
+    string outputFileName = parser.getValueByKey(arguments, "outputsFile");
+    this->inputsFile = inputFileName;
+    this->outputFile = outputFileName;
+    if(N % 2 > 0)
         T++;
-    }
 
 
-    m_partyId = stoi(arguments["partyID"]);
+    m_partyId = stoi(parser.getValueByKey(arguments, "partyID"));
     s = to_string(m_partyId);
-    circuit.readCircuit(arguments["circuitFile"].c_str());
+
+    string circuitFileName = parser.getValueByKey(arguments, "circuitFile");
+    circuit.readCircuit(circuitFileName.c_str());
     circuit.reArrangeCircuit();
     M = circuit.getNrOfGates();
     numOfInputGates = circuit.getNrOfInputGates();
@@ -411,34 +407,10 @@ ProtocolParty<FieldType>::ProtocolParty(int argc, char* argv[]) : Protocol("MPCH
     shareIndex = numOfInputGates;
     counter = 0;
 
-    vector<string> subTaskNames{"Offline", "preparationPhase", "Online", "inputPhase", "ComputePhase", "VerificationPhase", "outputPhase"};
-    timer = new Measurement(*this, subTaskNames);
-    //comm->ConnectionToServer(s);
-
-    //boost::asio::io_service io_service;
-
-    MPCCommunication comm;
-
-    parties = comm.setCommunication(io_service, m_partyId, N, arguments["partiesFile"]);
-
-    string tmp = "init times";
-    //cout<<"before sending any data"<<endl;
-    byte tmpBytes[20];
-    for (int i=0; i<parties.size(); i++){
-        if (parties[i]->getID() < m_partyId){
-            parties[i]->getChannel()->write(tmp);
-            parties[i]->getChannel()->read(tmpBytes, tmp.size());
-        } else {
-            parties[i]->getChannel()->read(tmpBytes, tmp.size());
-            parties[i]->getChannel()->write(tmp);
-        }
-    }
-
-
     readMyInputs();
 
     auto t1 = high_resolution_clock::now();
-    initializationPhase(/*matrix_him, matrix_vand, m*/);
+    initializationPhase();
 
     auto t2 = high_resolution_clock::now();
 
@@ -655,8 +627,6 @@ bool ProtocolParty<FieldType>::broadcast(int party_id, vector<byte> myMessage, v
 template <class FieldType>
 void ProtocolParty<FieldType>::readMyInputs()
 {
-
-    //cout<<"inputs file" << inputsFile<<endl;
     ifstream myfile;
     int input;
     int i =0;
@@ -667,7 +637,6 @@ void ProtocolParty<FieldType>::readMyInputs()
         i++;
     } while(!(myfile.eof()));
     myfile.close();
-    //cout<<"after read inputs" <<endl;
 
 }
 
@@ -686,7 +655,6 @@ void ProtocolParty<FieldType>::run() {
 
         auto t2end = high_resolution_clock::now();
         auto duration = duration_cast<milliseconds>(t2end-t1start).count();
-        protocolTimer->totalTimeArr[iteration] = duration;
 
         cout << "time in milliseconds for protocol: " << duration << endl;
     }
@@ -715,7 +683,6 @@ void ProtocolParty<FieldType>::runOffline() {
     if(flag_print_timings) {
         cout << "time in milliseconds preparationPhase: " << duration << endl;
     }
-    protocolTimer->preparationPhaseArr[iteration] =duration;
 
 
 
@@ -732,7 +699,6 @@ void ProtocolParty<FieldType>::runOnline() {
     auto t2 = high_resolution_clock::now();
 
     auto duration = duration_cast<milliseconds>(t2-t1).count();
-    protocolTimer->inputPreparationArr[iteration] = duration;
     if(flag_print_timings) {
         cout << "time in milliseconds inputPhase: " << duration << endl;
     }
@@ -747,9 +713,6 @@ void ProtocolParty<FieldType>::runOnline() {
     t2 = high_resolution_clock::now();
 
     duration = duration_cast<milliseconds>(t2-t1).count();
-    protocolTimer->computationPhaseArr[iteration] = duration;
-
-
 
     if(flag_print_timings) {
         cout << "time in milliseconds computationPhase: " << duration << endl;
@@ -762,7 +725,6 @@ void ProtocolParty<FieldType>::runOnline() {
 
     t2 = high_resolution_clock::now();
     duration = duration_cast<milliseconds>(t2-t1).count();
-    protocolTimer->verificationPhaseArr[iteration] = duration;
 
     if(flag_print_timings) {
         cout << "time in milliseconds verificationPhase: " << duration << endl;
@@ -776,7 +738,6 @@ void ProtocolParty<FieldType>::runOnline() {
     t2 = high_resolution_clock::now();
 
     duration = duration_cast<milliseconds>(t2-t1).count();
-    protocolTimer->outputPhaseArr[iteration] = duration;
 
     if(flag_print_timings) {
         cout << "time in milliseconds outputPhase: " << duration << endl;
@@ -789,21 +750,16 @@ void ProtocolParty<FieldType>::computationPhase(HIM<FieldType> &m) {
     int count = 0;
     int countNumMult = 0;
     int countNumMultForThisLayer = 0;
-    //processRandoms();
 
     int numOfLayers = circuit.getLayers().size();
     for(int i=0; i<numOfLayers-1;i++){
-//        count = processSmul();
-//        count += processAdditions();
-//        count += processSubtractions();
-//        count += processMultiplications(m);
 
         currentCirciutLayer = i;
         count = processNotMult();
 
         countNumMultForThisLayer = processMultiplications(countNumMult);//send the index of the current mult gate
         countNumMult += countNumMultForThisLayer;;
-        count+=countNumMultForThisLayer;
+        count += countNumMultForThisLayer;
 
     }
 }
@@ -827,7 +783,6 @@ void ProtocolParty<FieldType>::inputPhase()
     vector<vector<byte>> sendBufsBytes(N);
     vector<vector<byte>> recBufBytes(N);
     vector<vector<FieldType>> recBufElements(N);
-
 
     int input;
     int index = 0;
@@ -2878,7 +2833,6 @@ void ProtocolParty<FieldType>::sendDataFromP1(vector<byte> &sendBuf, int first, 
 template <class FieldType>
 void ProtocolParty<FieldType>::printSubSet( bitset<MAX_PRSS_PARTIES> &l){
     for(int i=0; i<MAX_PRSS_PARTIES;i++){
-
         if(l[i]==true)
             cout << " " << i+1;
     }
@@ -2888,8 +2842,6 @@ void ProtocolParty<FieldType>::printSubSet( bitset<MAX_PRSS_PARTIES> &l){
 
 template <class FieldType>
 void ProtocolParty<FieldType>::subset(int size, int left, int index, bitset<MAX_PRSS_PARTIES> &l){
-
-
 
     if(left==0){
         //printSubSet(l);
@@ -2901,16 +2853,11 @@ void ProtocolParty<FieldType>::subset(int size, int left, int index, bitset<MAX_
     }
     for(int i=index; i<size;i++){
         l.set(i);
-
-
-
         subset(size,left-1,i+1,l);
         l.reset(i);
         if(index==0)
             firstIndex.push_back(counter);
-
     }
-
 }
 
 
@@ -2918,17 +2865,7 @@ template <class FieldType>
 ProtocolParty<FieldType>::~ProtocolParty()
 {
     delete field;
-
-    protocolTimer->writeToFile();
-    delete protocolTimer;
-
-    io_service.stop();
-    delete timer;
 }
-
-
-
-
 
 
 #endif /* PROTOCOL_H_ */
