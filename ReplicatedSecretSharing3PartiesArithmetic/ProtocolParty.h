@@ -22,7 +22,7 @@ using namespace std;
 using namespace std::chrono;
 
 template <class FieldType>
-class ProtocolParty : public Protocol, public HonestMajority, public ThreeParty{
+class ProtocolParty : public MPCProtocol, public HonestMajority {
 private:
     /**
      * N - number of parties
@@ -206,7 +206,8 @@ public:
 };
 
 template <class FieldType>
-ProtocolParty<FieldType>::ProtocolParty(int argc, char* argv[]) : Protocol("Replicated secret sharing 3 parties arithmetic", argc, argv) {
+ProtocolParty<FieldType>::ProtocolParty(int argc, char* argv[]) :
+MPCProtocol("Replicated secret sharing 3 parties arithmetic", argc, argv) {
 
     this->times = stoi(this->getParser().getValueByKey(arguments, "internalIterationsNumber"));
 
@@ -224,8 +225,9 @@ ProtocolParty<FieldType>::ProtocolParty(int argc, char* argv[]) : Protocol("Repl
 
     m_partyId = stoi(this->getParser().getValueByKey(arguments, "partyID"));
 
-    vector<string> subTaskNames{"Offline", "GenerateRandomness", "Online", "InputPreparation", "ComputationPhase", "Verification", "OutputPhase"};
-    timer = new Measurement(*this, subTaskNames);
+    vector<string> subTaskNames{"Offline", "GenerateRandomness", "Online", "InputPreparation", "ComputationPhase",
+                                "Verification", "OutputPhase"};
+    this->timer->addTaskNames(subTaskNames);
     s = to_string(m_partyId);
     circuit.readCircuit(this->getParser().getValueByKey(arguments, "circuitFile").c_str());
     circuit.reArrangeCircuit();
@@ -234,6 +236,7 @@ ProtocolParty<FieldType>::ProtocolParty(int argc, char* argv[]) : Protocol("Repl
     numOfOutputGates = circuit.getNrOfOutputGates();
     myInputs.resize(numOfInputGates);
     shareIndex = numOfInputGates;
+
 
     parties = MPCCommunication::setCommunication(io_service, m_partyId, N,
                 this->getParser().getValueByKey(arguments, "partiesFile"));
@@ -248,19 +251,6 @@ ProtocolParty<FieldType>::ProtocolParty(int argc, char* argv[]) : Protocol("Repl
 
     leftChannel = parties[L]->getChannel();
     rightChannel = parties[R]->getChannel();
-
-    string tmp = "init times";
-
-    byte tmpBytes[20];
-    for (int i=0; i<parties.size(); i++){
-        if (parties[i]->getID() < m_partyId){
-            parties[i]->getChannel()->write(tmp);
-            parties[i]->getChannel()->read(tmpBytes, tmp.size());
-        } else {
-            parties[i]->getChannel()->read(tmpBytes, tmp.size());
-            parties[i]->getChannel()->write(tmp);
-        }
-    }
 
     readMyInputs();
 

@@ -2,11 +2,10 @@
 #ifndef INC_20160901_MALICIOUSMPC_DOUBLEBUFFER_HASHABSTRACT_HPP
 #define INC_20160901_MALICIOUSMPC_DOUBLEBUFFER_HASHABSTRACT_HPP
 
+#include <cstring>
+#include <iostream>
 #include <openssl/evp.h>
-#include <iostream> //for testing
-
-//#define USECXXPROF
-//#include <cxxprof_static/CxxProf.h>
+#include <libscapi/include/infra/Common.hpp>
 
 
 using namespace std;
@@ -25,8 +24,6 @@ public:
     void getHashedDataOnce(unsigned char *in, int inSizeBytes, unsigned char *out,
                            unsigned int *outSizeBytes)
     {
-        //CXXPROF_ACTIVITY("hash");
-
         hashUpdate(in, inSizeBytes);
         hashFinal(out, outSizeBytes);
     }

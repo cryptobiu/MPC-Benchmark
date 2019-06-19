@@ -20,7 +20,11 @@ public:
 
 private:
     int _finalSizeBytes = 16;
+#if OPENSSL_VERSION_NUMBER < 0x10100000L
     EVP_CIPHER_CTX _ctx;
+#else
+    EVP_CIPHER_CTX *_ctx;
+#endif
     unsigned char _key[16]; // 128-bit key
     unsigned char *_iv;     // initialization vector
     int _unusedOutl;

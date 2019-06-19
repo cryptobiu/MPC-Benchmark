@@ -1,4 +1,3 @@
-#include <cstring>
 #include "HashEncrypt.h"
 
 /**
@@ -16,13 +15,31 @@ HashEncrypt::HashEncrypt(const unsigned char *key, const unsigned char *iv, size
     _iv = new unsigned char[ivSizeBytes];
     memcpy(_iv, iv, ivSizeBytes);
 
-    EVP_CIPHER_CTX_init(&_ctx);
+#if OPENSSL_VERSION_NUMBER < 0x10100000L
+    if(EVP_CIPHER_CTX_init(&_ctx) == 0)
+        throw IllegalStateException("Cannot create Hash Object");
 
-    EVP_EncryptInit_ex(&_ctx, EVP_aes_128_gcm(), NULL, NULL, NULL); //TODO check return value == 1
+    if (EVP_EncryptInit_ex(&_ctx, EVP_aes_128_gcm(), NULL, NULL, NULL) == 0)
+        throw IllegalStateException("Cannot create Hash Object");
 
-    EVP_CIPHER_CTX_ctrl(&_ctx, EVP_CTRL_GCM_SET_IVLEN, ivSizeBytes, NULL);
+    if (EVP_CIPHER_CTX_ctrl(&_ctx, EVP_CTRL_GCM_SET_IVLEN, ivSizeBytes, NULL) == 0)
+        throw IllegalStateException("Cannot create Hash Object");
 
-    EVP_EncryptInit_ex(&_ctx, NULL, NULL, _key, _iv);
+    if (EVP_EncryptInit_ex(&_ctx, NULL, NULL, _key, _iv) == 0)
+        throw IllegalStateException("Cannot create Hash Object");
+#else
+    if(EVP_CIPHER_CTX_init(_ctx) == 0)
+        throw IllegalStateException("Cannot create Hash Object");
+
+    if (EVP_EncryptInit_ex(_ctx, EVP_aes_128_gcm(), NULL, NULL, NULL) == 0)
+        throw IllegalStateException("Cannot create Hash Object");
+
+    if (EVP_CIPHER_CTX_ctrl(_ctx, EVP_CTRL_GCM_SET_IVLEN, ivSizeBytes, NULL) == 0)
+        throw IllegalStateException("Cannot create Hash Object");
+
+    if (EVP_EncryptInit_ex(_ctx, NULL, NULL, _key, _iv) == 0)
+        throw IllegalStateException("Cannot create Hash Object");
+#endif
 
 }
 
@@ -31,7 +48,11 @@ HashEncrypt::HashEncrypt(const unsigned char *key, const unsigned char *iv, size
  */
 HashEncrypt::~HashEncrypt()
 {
+#if OPENSSL_VERSION_NUMBER < 0x10100000L
     EVP_CIPHER_CTX_cleanup(&_ctx);
+#else
+    EVP_CIPHER_CTX_cleanup(_ctx);
+#endif
 
     delete[] _iv;
     _iv = nullptr;
@@ -44,9 +65,14 @@ HashEncrypt::~HashEncrypt()
  */
 void HashEncrypt::hashUpdate(unsigned char *in, int inSizeBytes)
 {
-    //CXXPROF_ACTIVITY("gcm update");
 
-    EVP_EncryptUpdate(&_ctx, NULL, &_unusedOutl, in, inSizeBytes); //TODO check return value == 1
+#if OPENSSL_VERSION_NUMBER < 0x10100000L
+    if (EVP_EncryptUpdate(&_ctx, NULL, &_unusedOutl, in, inSizeBytes) == 0)
+        throw IllegalStateException("Cannot create Hash Object");
+#else
+    if (EVP_EncryptUpdate(_ctx, NULL, &_unusedOutl, in, inSizeBytes) == 0)
+        throw IllegalStateException("Cannot create Hash Object");
+#endif
 }
 
 
@@ -57,10 +83,18 @@ void HashEncrypt::hashUpdate(unsigned char *in, int inSizeBytes)
  */
 void HashEncrypt::hashFinal(unsigned char *out, unsigned int *outSizeBytes)
 {
-    //CXXPROF_ACTIVITY("gcm final");
+#if OPENSSL_VERSION_NUMBER < 0x10100000L
+    if (EVP_EncryptFinal_ex(&_ctx, NULL, &_unusedOutl) == 0)
+        throw IllegalStateException("Cannot create Hash Object");
 
-    EVP_EncryptFinal_ex(&_ctx, NULL, &_unusedOutl); //TODO check return value == 1
+    if(EVP_CIPHER_CTX_ctrl(&_ctx, EVP_CTRL_GCM_GET_TAG, _finalSizeBytes, out) == 0)
+        throw IllegalStateException("Cannot create Hash Object");
+#else
+    if (EVP_EncryptFinal_ex(_ctx, NULL, &_unusedOutl) == 0)
+        throw IllegalStateException("Cannot create Hash Object");
 
-    EVP_CIPHER_CTX_ctrl(&_ctx, EVP_CTRL_GCM_GET_TAG, _finalSizeBytes, out);
+    if(EVP_CIPHER_CTX_ctrl(_ctx, EVP_CTRL_GCM_GET_TAG, _finalSizeBytes, out) == 0)
+        throw IllegalStateException("Cannot create Hash Object");
+#endif
     *outSizeBytes = _finalSizeBytes;
 }
