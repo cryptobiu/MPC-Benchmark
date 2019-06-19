@@ -6,9 +6,16 @@
 #define SCAPIPRG_PRG_HPP
 
 
+#include <fcntl.h>
+#include <unistd.h>
 #include <iostream>
+
+#include <sys/stat.h>
+#include <sys/types.h>
 #include <openssl/aes.h>
 #include <openssl/evp.h>
+#include <libscapi/include/infra/Common.hpp>
+
 #include "aes_locl.h"
 
 extern unsigned int OPENSSL_ia32cap_P[];
@@ -36,38 +43,29 @@ public:
 
 private:
     void checkAESNI();
-     byte *getRandomBytes();
-     void prepare(int isPlanned = 1);
-
+    byte *getRandomBytes();
+    void prepare(int isPlanned = 1);
 
     static unsigned char m_defaultkey[16];
     static unsigned char m_defaultiv[16];
-
+#if OPENSSL_VERSION_NUMBER < 0x10100000L
     EVP_CIPHER_CTX m_enc;
-
+#else
+    EVP_CIPHER_CTX *m_enc;
+#endif
     const byte* m_key;
-
     int m_cacheSize;
-
     byte *m_cachedRandoms;
-
     const byte *m_iv;
-
     byte* m_ctr;
-
     unsigned long m_ctr_count = 0;
-
     int m_cachedRandomsIdx;
-
     int m_idx;
-
     uint32_t *m_pIdx;
     uint32_t m_u1;
     uint32_t m_u2;
     uint32_t m_u3;
     uint32_t m_u4;
-
-
     static PRG *_prg;
 };
 

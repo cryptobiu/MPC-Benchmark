@@ -1,10 +1,4 @@
-#include <openssl/evp.h>
-
 #include "AES_PRG.h"
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <unistd.h>
 
 //
 // WE USE THE AES_ECB method and not AES_CTR as AES_CTR is not avaialble by default
@@ -58,17 +52,23 @@ PRG::PRG(byte *key, byte *iv,int cacheSize)
     m_cachedRandomsIdx = m_cacheSize;
 
     //INIT openssl. also creates the key schedule data structures internally
-    EVP_CIPHER_CTX_init(&m_enc);
-    EVP_EncryptInit(&m_enc, EVP_aes_128_ecb(),m_key, m_iv);
+#if OPENSSL_VERSION_NUMBER < 0x10100000L
+    if (EVP_CIPHER_CTX_init(&m_enc) == 0)
+        throw IllegalStateException("Cannot init PRG object");
+    if (EVP_EncryptInit(&m_enc, EVP_aes_128_ecb(),m_key, m_iv) == 0)
+        throw IllegalStateException("Cannot init PRG object");
+#else
+    if (EVP_CIPHER_CTX_init(m_enc) == 0)
+        throw IllegalStateException("Cannot init PRG object");
+    if (EVP_EncryptInit(m_enc, EVP_aes_128_ecb(),m_key, m_iv) == 0)
+        throw IllegalStateException("Cannot init PRG object");
+#endif
 
     m_cachedRandoms = new byte[m_cacheSize*16]();
     m_ctr = new byte[m_cacheSize*16]();
 
- //   cout << "CACHE SIZE = " << m_cacheSize << '\n';
-
     //This method created the first buffer of  CACHHE_SIZE*128Bit
     prepare(1);
-
 }
 
 //
@@ -77,7 +77,11 @@ PRG::PRG(byte *key, byte *iv,int cacheSize)
 PRG::~PRG()
 {
     delete m_cachedRandoms;
+#if OPENSSL_VERSION_NUMBER < 0x10100000L
     EVP_CIPHER_CTX_cleanup(&m_enc);
+#else
+    EVP_CIPHER_CTX_cleanup(m_enc);
+#endif
 }
 
 // INTERNAL METHOD USED TO GET THE NEXT 128bit pointer. Recreates cache if necessary
@@ -100,13 +104,11 @@ byte * PRG::getRandomBytes()
 //
 void PRG::prepare(int isPlanned)
 {
-
     int actual;
-
 	unsigned long *p = (unsigned long *)m_ctr;
+
     // update and write the counter. we use a long counter so in every 128bit counter buffer,
     // 64 low bits will be 0 and 64 high bits will include the counter
-
     for (int i = 0; i < m_cacheSize; i++)
     {
        p++;
@@ -115,9 +117,14 @@ void PRG::prepare(int isPlanned)
 	   p++;
 
     }
-
     //perform the encrytpion
-    EVP_EncryptUpdate(&m_enc, m_cachedRandoms, &actual , m_ctr, 16*m_cacheSize );
+#if OPENSSL_VERSION_NUMBER < 0x10100000L
+    if (EVP_EncryptUpdate(&m_enc, m_cachedRandoms, &actual , m_ctr, 16*m_cacheSize ) == 0)
+        throw IllegalStateException("Cannot encrypt");
+#else
+    if (EVP_EncryptUpdate(m_enc, m_cachedRandoms, &actual , m_ctr, 16*m_cacheSize ) == 0)
+        throw IllegalStateException("Cannot encrypt");
+#endif
 
     //reset pointers
     m_cachedRandomsIdx = 0;
