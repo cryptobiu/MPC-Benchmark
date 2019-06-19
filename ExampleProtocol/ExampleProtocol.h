@@ -21,7 +21,7 @@ using random_bytes_engine = std::independent_bits_engine<
 
 
 
-class ExampleProtocol :public MPCProtocol, public MultiParty {
+class ExampleProtocol :public MPCProtocol {
 
 public:
     ExampleProtocol(int argc, char* argv []);
