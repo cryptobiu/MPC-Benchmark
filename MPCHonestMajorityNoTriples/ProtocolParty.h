@@ -30,7 +30,7 @@ using namespace std;
 using namespace std::chrono;
 
 template <class FieldType>
-class ProtocolParty : public Protocol, public HonestMajority, MultiParty{
+class ProtocolParty : public MPCProtocol, public HonestMajority{
 
 private:
 
@@ -276,7 +276,7 @@ public:
 
 
 template <class FieldType>
-ProtocolParty<FieldType>::ProtocolParty(int argc, char* argv[]) : Protocol("MPCHonestMajorityNoTriples", argc, argv)
+ProtocolParty<FieldType>::ProtocolParty(int argc, char* argv[]) : MPCProtocol("MPCHonestMajorityNoTriples", argc, argv)
 {
     string circuitFile = this->getParser().getValueByKey(arguments, "circuitFile");
     this->times = stoi(this->getParser().getValueByKey(arguments, "internalIterationsNumber"));
