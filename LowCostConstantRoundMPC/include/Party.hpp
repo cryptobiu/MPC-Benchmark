@@ -18,7 +18,7 @@ using namespace NTL;
 /**
  * This class represents a party in the Low cost constant round MPC combining BMR and ot protocol.
  */
-class Party : public MPCProtocol, DisHonestMajority, MultiParty{
+class Party : public MPCProtocol, DisHonestMajority{
 
 private:
     int id;                         //Each party gets unique id number
