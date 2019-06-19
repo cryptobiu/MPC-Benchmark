@@ -1,22 +1,16 @@
-.idea/
-CMakeFiles/
-CMakeCache.txt
-cmake-build-debug/
+# General files
 
-GMW/.idea/
-GMW/cmake-build-debug/
-GMW/CMakeCache.txt
-GMW/CMakeFiles
-GMW/Makefile
-GMW/cmake_install.cmake
+**/*.cbp
+**/*.xml
+**/Makefile
+**/cmake_install.cmake
+**/cmake-build-debug/
+**/CMakeFiles/
+**/CMakeCache.txt/
+**/.idea/
+**/.json
 
-ReplicatedSecretSharing3PartiesArithmetic/.idea/
-ReplicatedSecretSharing3PartiesArithmetic/CMakeCache.txt
-ReplicatedSecretSharing3PartiesArithmetic/CMakeFiles/
-ReplicatedSecretSharing3PartiesArithmetic/Makefile
+LowCostConstantRoundMPC/LowCostConstantRoundMPC
+MPCHonestMajorityNoTriples/MPCHonestMajorityNoTriples
+ReplicatedSecretSharing3Parties/ReplicatedSecretSharing3Parties
 ReplicatedSecretSharing3PartiesArithmetic/ReplicatedSecretSharing3PartiesArithmetic
-ReplicatedSecretSharing3PartiesArithmetic/cmake-build-debug/
-ReplicatedSecretSharing3PartiesArithmetic/cmake_install.cmake
-*.xml
-*.cbp
-*.json
