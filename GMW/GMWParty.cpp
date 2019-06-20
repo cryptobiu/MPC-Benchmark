@@ -4,7 +4,7 @@
 
 #include "GMWParty.h"
 
-GMWParty::GMWParty(int argc, char* argv[]) : Protocol("GMW", argc, argv)
+GMWParty::GMWParty(int argc, char* argv[]) : MPCProtocol("GMW", argc, argv)
 {
     circuit = make_shared<Circuit>();
     circuit->readCircuit(this->getParser().getValueByKey(arguments, "circuitFile"));
@@ -13,17 +13,11 @@ GMWParty::GMWParty(int argc, char* argv[]) : Protocol("GMW", argc, argv)
     times = stoi(this->getParser().getValueByKey(arguments, "internalIterationsNumber"));
 
     vector<string> subTaskNames{"Offline", "GenerateTriples", "Online", "InputSharing", "ComputeCircuit"};
-    timer = new Measurement(*this, subTaskNames);
-    string tmp = "init times";
-    byte tmpBytes[20];
+    this->timer->addTaskNames(subTaskNames);
     int numThreads = stoi(this->getParser().getValueByKey(arguments, "numThreads"));
     inputFileName = this->getParser().getValueByKey(arguments, "inputFile");
-
-	//Create the communication between this party and the other parties.
-    parties = MPCCommunication::setCommunication(io_service, id, circuit->getNrOfParties(),
-                                                 this->getParser().getValueByKey(arguments, "partiesFile"));
-    cout << "----------end communication--------------" << endl;
-
+    auto partiesFile = this->getParser().getValueByKey(arguments, "partiesFile");
+    initOT(partiesFile);
 
     if (parties.size() <= numThreads){
         this->numThreads = parties.size();
@@ -31,6 +25,46 @@ GMWParty::GMWParty(int argc, char* argv[]) : Protocol("GMW", argc, argv)
     } else{
         this->numThreads = numThreads;
         numPartiesForEachThread = (parties.size() + numThreads - 1)/ numThreads;
+    }
+
+}
+
+void GMWParty::initOT(string &configFile)
+{
+    //open file
+    ConfigFile cf(configFile);
+
+    string portString, ipString;
+    vector<int> ports(numParties);
+    vector<string> ips(numParties);
+
+    for (int i = 0; i < numParties; i++)
+    {
+        portString = "party_" + to_string(i) + "_port";
+        ipString = "party_" + to_string(i) + "_ip";
+
+        //get partys IPs and ports data
+        ports[i] = stoi(cf.Value("", portString));
+        ips[i] = cf.Value("", ipString);
+    }
+
+    SocketPartyData me, other;
+
+    for (int i=0; i<numParties; i++)
+    {
+        if (i < id)
+        {
+            receiver = new OTExtensionBristolReceiver(ips[i], ports[i]+ numParties -2 + id,
+                    true, nullptr);
+            sender = new OTExtensionBristolSender(ports[id] + numParties - 1 + i, true, nullptr);
+        }
+        else if (i > id)
+        {
+            OTBatchSender* sender = new OTExtensionBristolSender(ports[id] + numParties - 2 + i, true, nullptr);
+            OTBatchReceiver* receiver = new OTExtensionBristolReceiver(ips[i], ports[i]+ numParties -1 + id,
+                    true, nullptr);
+
+        }
     }
 }
 
@@ -54,7 +88,6 @@ void GMWParty::run(){
 }
 
 void GMWParty::runOffline(){
-    int numberOfParties = getParties().size() + 1;
     timer->startSubTask("GenerateTriples", currentIteration);
     generateTriples();
     timer->endSubTask("GenerateTriples", currentIteration);
@@ -64,7 +97,6 @@ void GMWParty::runOffline(){
 }
 
 void GMWParty::runOnline(){
-    int numberOfParties = getParties().size() + 1;
     timer->startSubTask("InputSharing", currentIteration);
     inputSharing();
     timer->endSubTask("InputSharing", currentIteration);
@@ -130,22 +162,22 @@ void GMWParty::generateTriplesForParty(PrgFromOpenSSLAES & prg, int first, int l
         }
         //If this id is lower than the other id, run the sender role in the OT,
         //else, run the receiver role.
-        if (id < parties[i]->getID()) {
+        if (id < i) {
 
             //Play the sender role of the OT and then the receiver role.
             OTExtensionRandomizedSInput sInput(circuit->getNrOfAndGates(), 8);
-            sOutput = parties[i]->getSender()->transfer(&sInput);
+            sOutput = this->sender->transfer(&sInput);
 
             OTExtensionRandomizedRInput rInput(sigma, 8);
-            rOutput = parties[i]->getReceiver()->transfer(&rInput);
+            rOutput = this->receiver->transfer(&rInput);
 
         } else {
             //Play the receiver role in the OT and then the sender role.
             OTExtensionRandomizedRInput input(sigma, 8);
-            rOutput = parties[i]->getReceiver()->transfer(&input);
+            rOutput = this->receiver->transfer(&input);
 
             OTExtensionRandomizedSInput sInput(circuit->getNrOfAndGates(), 8);
-            sOutput = parties[i]->getSender()->transfer(&sInput);
+            sOutput = this->sender->transfer(&sInput);
         }
 
         /* The sender output of the random ot are x0, x1.
@@ -192,7 +224,8 @@ void GMWParty::inputSharing(){
             threads[t] = thread(&GMWParty::sendSharesToParties, this, ref(prg), ref(myInputBits), t * numPartiesForEachThread,
                                 (t + 1) * numPartiesForEachThread);
         } else {
-            threads[t] = thread(&GMWParty::sendSharesToParties, this, ref(prg), ref(myInputBits), t * numPartiesForEachThread, parties.size());
+            threads[t] = thread(&GMWParty::sendSharesToParties, this, ref(prg), ref(myInputBits),
+                    t * numPartiesForEachThread, parties.size());
         }
     }
     for (int t=0; t<numThreads; t++){

@@ -5,22 +5,21 @@
 #ifndef GMW_GMWPARTY_H
 #define GMW_GMWPARTY_H
 
-#include "Circuit.h"
-#include "MPCCommunication.h"
+#include <mutex>
+#include <thread>
+
 #include <libscapi/include/primitives/Prg.hpp>
 #include <libscapi/include/cryptoInfra/Protocol.hpp>
-#include <libscapi/include/infra/Measurement.hpp>
-#include <libscapi/include/cryptoInfra/SecurityLevel.hpp>
+#include <libscapi/include/interactive_mid_protocols/OTExtensionBristol.hpp>
+
+#include "Circuit.h"
 #include "CBitVector.h"
-#include <thread>
-#include <mutex>
 
 /**
  * This class represents the GMW protocol.
- * A general explanation of the GMW protocol can be found at http://crypto.biu.ac.il/sites/default/files/Winter%20School%2015%20-%20GMW%20and%20OT%20extension.pdf.
- * This implementation is more efficient since we use Beaver's multiplication triples instead of 1 out of 4 OT.
+ * * This implementation is more efficient since we use Beaver's multiplication triples instead of 1 out of 4 OT.
  */
-class GMWParty : public Protocol, public SemiHonest, public MultiParty{
+class GMWParty : public MPCProtocol, public SemiHonest{
 
 private:
     boost::asio::io_service io_service;
@@ -33,12 +32,10 @@ private:
     string inputFileName;
     vector<byte> output;
 	vector<byte> myInputBits;
-
-    Measurement *timer;
+    OTBatchReceiver* receiver;      //Underlying ot receiver to use.
+    OTBatchSender* sender;          //Underlying ot sender to use.
     int times;  //Number of times to execute the protocol
     int currentIteration = 0; //Current iteration number
-
-//	Measurement timer;
 
 	/*
 	 * Generates Beaver's multiplication triples to use in the protocol.
@@ -96,6 +93,12 @@ private:
 	* The splitting to parties is done in order to enable execution using threads.
 	 */
     void revealOutputFromParty(vector<byte> & output, int first, int last);
+
+    /*
+     * Init OT objects.
+     */
+
+    void initOT(string &configFile);
 
 public:
 
