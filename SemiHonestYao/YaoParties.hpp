@@ -105,7 +105,7 @@ struct YaoConfig {
 /**
 * This is an implementation of party one of Yao protocol.
 */
-class PartyOne : public MPCProtocol, public SemiHonest, public TwoParty{
+class PartyOne : public MPCProtocol, public SemiHonest{
 private:
 	int id;
 	OTBatchSender * otSender;			//The OT object that used in the protocol.
@@ -180,7 +180,7 @@ public:
 /**
 * This is an implementation of party one of Yao protocol.
 */
-class PartyTwo : public MPCProtocol, public SemiHonest, public TwoParty{
+class PartyTwo : public MPCProtocol, public SemiHonest{
 private:
 	int id;
 	OTBatchReceiver * otReceiver;			//The OT object that used in the protocol.
