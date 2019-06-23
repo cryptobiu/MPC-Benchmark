@@ -10,23 +10,23 @@ void compute(Bit * res, Bit * in, Bit * in2) {
     cf->compute((block*)res, (block*)in, (block*)in2);
 }
 
-YaoSEParty::YaoSEParty(int argc, char* argv[]) : Protocol("MaliciousYaoSingleExecution", argc, argv){
+YaoSEParty::YaoSEParty(int argc, char* argv[]) : MPCProtocol("MaliciousYaoSingleExecution", argc, argv, false){
 
-    id = stoi(arguments["partyID"]);
-    CircuitConverter::convertScapiToBristol(arguments["circuitFile"], "emp_format_circuit.txt", false);
+    id = stoi(this->getParser().getValueByKey(arguments, "partyID"));
+    string circuitFileName =  this->getParser().getValueByKey(arguments,"circuitFile");
 
-    string inputFile = arguments["inputFile"];
-    timer = new Measurement("MaliciousYaoSingleExecution", id, 2, times);
-    times = stoi(arguments["internalIterationsNumber"]);
+    CircuitConverter::convertScapiToBristol(circuitFileName, "emp_format_circuit.txt", false);
+
+    string inputFile = this->getParser().getValueByKey(arguments, "inputFile");
+    times = stoi(this->getParser().getValueByKey(arguments, "internalIterationsNumber"));
     //open file
-    ConfigFile config(arguments["partiesFile"]);
+    ConfigFile config((this->getParser().getValueByKey(arguments,"partiesFile")));
     cout << "After parties file" << endl;
 
     string portString = "party_1_port";
     string ipString = "party_1_ip";
     int port;
     string ip;
-
 
     //get partys IPs and ports data
     port = stoi(config.Value("", portString));
@@ -46,7 +46,7 @@ YaoSEParty::YaoSEParty(int argc, char* argv[]) : Protocol("MaliciousYaoSingleExe
     }
 
     out = new bool[cf->n3];
-    mal = new Malicious2PC <>(io, id + 1, cf->n1, cf->n2, cf->n3);
+    mal = new Malicious2PC <NetIO, RTCktOpt::off>(io, id + 1, cf->n1, cf->n2, cf->n3);
 }
 
 void YaoSEParty::readInputs(string inputFile, bool * inputs, int size){
@@ -67,32 +67,22 @@ void YaoSEParty::readInputs(string inputFile, bool * inputs, int size){
  */
 void YaoSEParty::run() {
     vector<string> subTaskNames{"Run"};
-    timer->setTaskNames(subTaskNames);
     void * f = (void *)&compute;
     for (currentIteration = 0; currentIteration<times; currentIteration++) {
-        timer->startSubTask(0, currentIteration);
-        if (id == 0) {
+        if (id == 0)
             mal->alice_run(f, input);
-        } else {
+        else
             mal->bob_run(f, input, out);
-        }
-        timer->endSubTask(0, currentIteration);
     }
 }
 
 void YaoSEParty::runOffline(){
-    vector<string> subTaskNames{"Offline", "Online"};
-    timer->setTaskNames(subTaskNames);
 
     void * f = (void *)&compute;
-    timer->startSubTask(0, currentIteration);
-    if (id == 0) {
+    if (id == 0)
         mal->alice_offline(f);
-
-    } else {
+    else
         mal->bob_offline(f);
-    }
-    timer->endSubTask(0, currentIteration);
 }
 
 void YaoSEParty::sync(){
@@ -107,14 +97,10 @@ void YaoSEParty::preOnline() {
 
 void YaoSEParty::runOnline(){
     void * f = (void *)&compute;
-
-    timer->startSubTask(1, currentIteration);
-    if (id == 0) {
+    if (id == 0)
         mal->alice_online(f, input);
-    } else {
+    else
         mal->bob_online(f, input, out);
-    }
-    timer->endSubTask(1, currentIteration);
 }
 
 #endif
