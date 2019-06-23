@@ -12,7 +12,8 @@ The protocol is based on the https://eprint.iacr.org/2016/762.pdf paper.
 ### INSTALLATION AND EXECUTION
 
 1. Go in the YaoSingleExecution directory.
-2. Run the make command
+2. Install EMP library using the script: `./install_emp.sh`
+2. Run this command: `cmake . && make`
 3. To run the program type:
 `./MaliciousYaoSingleExecution -partyID [party_id] -circuitFile [circuit_file_name] -partiesFile [parties_file_name]
                        -inputFile [input_file_name] -internalIterationsNumber [#times_to_run_the_protocol]`.  
