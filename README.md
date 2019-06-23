@@ -3,8 +3,8 @@
 the main goal of the repository is to offer  Multi-Party Computation (MPC) protocols.
 
 The repository contains these protocols:
-*  BroadcastComm - protocol for broadcast communication
-* GMW - implementation of GMW protocol
+* ExampleProtocol
+* GMW
 * HyperMPC
 * LowCostConstantRound
 * MPCHonestMajority
@@ -17,7 +17,7 @@ The repository contains these protocols:
 
 #### Installation
 
-In order to install this repository you will need first to install [libscapi](https://github.com/cryptobiu/libscapi). Please install libscapi at your home directory (in the future we will add the feature for custom installation directory).
+In order to install this repository you will need first to install [libscapi](https://github.com/cryptobiu/libscapi)
 
 After you installed `libscapi` clone this repository to your home directory.
 
