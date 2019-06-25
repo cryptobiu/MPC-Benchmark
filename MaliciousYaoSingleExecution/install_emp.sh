@@ -34,3 +34,6 @@ cd emp-m2pc
 cmake .
 make
 cd ..
+
+mkdir -p ~/EMP
+mv emp-* ~/EMP
