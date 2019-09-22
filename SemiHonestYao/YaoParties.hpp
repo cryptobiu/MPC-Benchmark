@@ -27,39 +27,34 @@
 
 
 #pragma once 
-
+#include <thread>
 #include <boost/thread/thread.hpp>
-#include "../../include/comm/Comm.hpp"
-#define AES_KEY BC_AES_KEY // AES_KEY is defined both in GarbledBooleanCircuit and in OTSemiHonestExtension
-//#define NO_AESNI
+
+#define NO_AESNI
 #define KEY_SIZE 16
 
-#ifdef NO_AESNI
-    #include "../../include/circuits/GarbledBooleanCircuitNoIntrinsics.h"
-    #include "../../include/interactive_mid_protocols/OTExtensionLibote.hpp"
-
-#else
-    #include "../../include/circuits/GarbledBooleanCircuit.h"
-
-    #ifdef _WIN32
-        #include "../../include/interactive_mid_protocols/OTSemiHonestExtension.hpp"
-    #else
-         #include "../../include/interactive_mid_protocols/OTExtensionBristol.hpp"
-    #endif
-
-#endif
-#include "../../include/cryptoInfra/Protocol.hpp"
-#include "../../include/cryptoInfra/SecurityLevel.hpp"
-#include "../../include/circuits/GarbledCircuitFactory.hpp"
-
-#undef AES_KEY
-#define AES_KEY OT_AES_KEY
-
-#undef AES_KEY
-#include <thread>
+#include <libscapi/include/comm/Comm.hpp>
 #include <libscapi/include/infra/Scanner.hpp>
 #include <libscapi/include/infra/ConfigFile.hpp>
+#include <libscapi/include/cryptoInfra/Protocol.hpp>
+#include <libscapi/include/cryptoInfra/SecurityLevel.hpp>
+#include <libscapi/include/circuits/GarbledCircuitFactory.hpp>
 
+
+#ifdef NO_AESNI
+#include <libscapi/include/circuits/GarbledBooleanCircuitNoIntrinsics.h>
+#include <ot/alsz-ot-ext-snd.h>
+#include <ot/alsz-ot-ext-rec.h>
+#include <ot/xormasking.h>
+#include <ENCRYPTO_utils/rcvthread.h>
+#include <ENCRYPTO_utils/sndthread.h>
+#include <ENCRYPTO_utils/channel.h>
+#include <ENCRYPTO_utils/connection.h>
+
+#else
+#include <libscapi/include/circuits/GarbledBooleanCircuit.h>
+
+#endif
 
 
 
@@ -108,7 +103,16 @@ struct YaoConfig {
 class PartyOne : public MPCProtocol, public SemiHonest{
 private:
 	int id;
-	OTBatchSender * otSender;			//The OT object that used in the protocol.
+    OTExtSnd *m_sender;			//The OT object that used in the protocol.
+    SndThread* m_senderThread;
+    RcvThread* m_receiverThread;
+    unique_ptr<CSocket> m_socket;
+    uint32_t m_nSecParam = 128;
+    const int m_cConstSeed = 437398417012387813714564100; // DEBUG ONLY
+    const int m_nBaseOTs = 190;
+    const int m_nChecks = 380;
+    CLock *m_clock;
+    crypto *m_crypt;
 
 #ifdef NO_AESNI
 	GarbledBooleanCircuitNoIntrinsics * circuit;	//The garbled circuit used in the protocol.
@@ -120,10 +124,6 @@ private:
     //to be used after filled by garbling the circuit
 #endif
 	shared_ptr<CommParty> channel;				//The channel between both parties.
-
-
-
-
 	vector<byte> ungarbledInput;				//Inputs for the protocol
 	YaoConfig yaoConfig;
 
@@ -160,7 +160,7 @@ public:
         //delete inputs and output block arrays
 #endif
 		delete circuit;
-		delete otSender;
+		delete m_sender;
 
 
 	}
@@ -183,7 +183,17 @@ public:
 class PartyTwo : public MPCProtocol, public SemiHonest{
 private:
 	int id;
-	OTBatchReceiver * otReceiver;			//The OT object that used in the protocol.
+    OTExtRec * m_receiver;  //The OT object that used in the protocol.
+    unique_ptr<CSocket> m_socket;
+    SndThread* m_senderThread;
+    RcvThread* m_receiverThread;
+    uint32_t m_nSecParam = 128;
+    const int m_cConstSeed = 15657566154164561; // DEBUG ONLY
+    const int m_nBaseOTs = 190;
+    const int m_nChecks = 380;
+    CLock *m_clock;
+    crypto *m_crypt;
+
 #ifdef NO_AESNI
 	GarbledBooleanCircuitNoIntrinsics * circuit;	//The garbled circuit used in the protocol.
 #else
@@ -202,7 +212,7 @@ private:
 	* Compute the garbled circuit.
 	* @param otOutput The output from the OT protocol, which are party two inputs.
 	*/
-	void computeCircuit(OTBatchROutput * otOutput);
+	void computeCircuit();
 
 	/**
 	* Receive the circuit's garbled tables and translation table.
@@ -240,7 +250,7 @@ public:
 
 	~PartyTwo() {
 		delete circuit;
-		delete otReceiver;
+		delete m_receiver;
 
 	}
 

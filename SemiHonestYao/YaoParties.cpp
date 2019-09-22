@@ -77,16 +77,15 @@ PartyOne::PartyOne(int argc, char* argv[]) : MPCProtocol("SemiHonestYao", argc, 
     // create the semi honest OT extension sender
 	SocketPartyData senderParty(IpAddress::from_string(sender_ip), sender_port+1);
 	cout<<"sender ip: "<<senderParty.getIpAddress() <<"port:"<<senderParty.getPort()<<endl;
-#ifdef _WIN32
-	otSender = new OTSemiHonestExtensionSender(senderParty, 163, 1);
-#else
 
-    #ifdef NO_AESNI
-        otSender = new OTExtensionLiboteSender(sender_ip, senderParty.getPort(), true, false, channel.get());
-    #else
-        otSender = new OTExtensionBristolSender(senderParty.getPort(), true, channel);
-    #endif
-#endif
+    m_socket = Listen(senderParty.getIpAddress().to_string(), 7766);
+    m_clock = new CLock();
+    m_senderThread = new SndThread(m_socket.get(), m_clock);
+    m_receiverThread = new RcvThread(m_socket.get(), m_clock);
+    m_crypt = new crypto(m_nSecParam, (uint8_t*) this->m_cConstSeed);
+	m_sender = new ALSZOTExtSnd(m_crypt, m_receiverThread, m_senderThread,
+	        m_nBaseOTs, m_nChecks);
+
 
 };
 
@@ -147,10 +146,27 @@ void PartyOne::runOTProtocol() {
 		x0Arr.insert(x0Arr.end(), &allInputWireValues[beginIndex0], &allInputWireValues[beginIndex0 + KEY_SIZE]);
 		x1Arr.insert(x1Arr.end(), &allInputWireValues[beginIndex1], &allInputWireValues[beginIndex1 + KEY_SIZE]);
 	}
-	// create an OT input object with the keys arrays.
-	OTBatchSInput * input = new OTExtensionGeneralSInput(x0Arr, x1Arr, p2InputSize);
-	// run the OT's transfer phase.
-	otSender->transfer(input);
+
+    uint64_t numOTs = 100000;
+    //bitlength of the values that are transferred - NOTE that when bitlength is not 1 or a multiple of 8, the endianness has to be observed
+    uint32_t bitlength = 8;
+    uint32_t runs = 1;
+    uint32_t nsndvals = 2;
+    int m_nNumOTThreads = 1;
+    CBitVector delta;
+    MaskingFunction *m_fMaskFct = new XORMasking(bitlength, delta);
+    CBitVector** X = (CBitVector**) malloc(sizeof(CBitVector*) * nsndvals);
+
+    //creates delta as an array with "numOTs" entries of "bitlength" bit-values and fills delta with random values
+    delta.Create(numOTs, bitlength, m_crypt);
+
+    //Create the X values as two arrays with "numOTs" entries of "bitlength" bit-values and resets them to 0
+    for(uint32_t i = 0; i < nsndvals; i++) {
+        X[i] = new CBitVector();
+        X[i]->Create(numOTs, bitlength);
+    }
+
+    bool success = m_sender->send(numOTs, bitlength, nsndvals, X, Snd_OT, Rec_OT, m_nNumOTThreads, m_fMaskFct);
 }
 
 /*********************************/
@@ -187,17 +203,16 @@ PartyTwo::PartyTwo(int argc, char* argv[]) : MPCProtocol("SemiHonestYao", argc, 
 	setInputs(yao_config.input_file_2,  circuit->getNumberOfInputs(2));
 	// create the OT receiver.
 	SocketPartyData senderParty(IpAddress::from_string(sender_ip), sender_port+1);
-#ifdef _WIN32
-	otReceiver = new OTSemiHonestExtensionReceiver(senderParty, 163, 1);
-#else
 
-    #ifdef NO_AESNI
-        otReceiver = new OTExtensionLiboteReceiver(sender_ip, sender_port, true, false, channel.get());
-    #else
-        otReceiver = new OTExtensionBristolReceiver(senderParty.getIpAddress().to_string(), senderParty.getPort(), true, channel);
-    #endif
+    m_socket = Listen(senderParty.getIpAddress().to_string(), 7766);
+    m_clock = new CLock();
+    m_senderThread = new SndThread(m_socket.get(), m_clock);
+    m_receiverThread = new RcvThread(m_socket.get(), m_clock);
 
-#endif
+    m_crypt = new crypto(m_nSecParam, (uint8_t*) this->m_cConstSeed);
+    m_receiver = new ALSZOTExtRec(m_crypt, m_receiverThread, m_senderThread,
+                                m_nBaseOTs, m_nChecks);
+
 
 }
 
@@ -205,7 +220,7 @@ void PartyTwo::setInputs(string inputFileName, int numInputs) {
 	ungarbledInput = readInputAsVector(inputFileName, numInputs);
 }
 
-void PartyTwo::computeCircuit(OTBatchROutput * otOutput) {
+void PartyTwo::computeCircuit() {
 
 	// Get the input of the protocol.
 	vector<byte> p2Inputs = ((OTOnByteArrayROutput *)otOutput)->getXSigma();
