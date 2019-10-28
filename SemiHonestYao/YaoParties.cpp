@@ -27,11 +27,9 @@
 
 
 
-#include "YaoParties.hpp"
 #include <tuple>
-#ifndef _WIN32
-#include "../../include/circuits/Compat.h"
-#endif
+#include <libscapi/include/circuits/Compat.h>
+#include "YaoParties.hpp"
 
 vector<byte> readInputAsVector(string input_file, int numInputs) {
 	auto sc = scannerpp::Scanner(new scannerpp::File(input_file));
@@ -83,8 +81,7 @@ PartyOne::PartyOne(int argc, char* argv[]) : MPCProtocol("SemiHonestYao", argc, 
     m_senderThread = new SndThread(m_socket.get(), m_clock);
     m_receiverThread = new RcvThread(m_socket.get(), m_clock);
     m_crypt = new crypto(m_nSecParam, (uint8_t*) this->m_cConstSeed);
-	m_sender = new ALSZOTExtSnd(m_crypt, m_receiverThread, m_senderThread,
-	        m_nBaseOTs, m_nChecks);
+	m_sender = new IKNPOTExtSnd(m_crypt, m_receiverThread, m_senderThread);
 
 
 };
@@ -166,7 +163,8 @@ void PartyOne::runOTProtocol() {
         X[i]->Create(numOTs, bitlength);
     }
 
-    bool success = m_sender->send(numOTs, bitlength, nsndvals, X, Snd_OT, Rec_OT, m_nNumOTThreads, m_fMaskFct);
+    bool success = m_sender->send(numOTs, bitlength, nsndvals, X,
+            Snd_OT, Rec_OT, m_nNumOTThreads, m_fMaskFct);
 }
 
 /*********************************/
@@ -210,8 +208,7 @@ PartyTwo::PartyTwo(int argc, char* argv[]) : MPCProtocol("SemiHonestYao", argc, 
     m_receiverThread = new RcvThread(m_socket.get(), m_clock);
 
     m_crypt = new crypto(m_nSecParam, (uint8_t*) this->m_cConstSeed);
-    m_receiver = new ALSZOTExtRec(m_crypt, m_receiverThread, m_senderThread,
-                                m_nBaseOTs, m_nChecks);
+    m_receiver = new IKNPOTExtRec(m_crypt, m_receiverThread, m_senderThread);
 
 
 }
@@ -220,11 +217,11 @@ void PartyTwo::setInputs(string inputFileName, int numInputs) {
 	ungarbledInput = readInputAsVector(inputFileName, numInputs);
 }
 
-void PartyTwo::computeCircuit() {
+void PartyTwo::computeCircuit(CBitVector *c) {
 
 	// Get the input of the protocol.
-	vector<byte> p2Inputs = ((OTOnByteArrayROutput *)otOutput)->getXSigma();
-	int p2InputsSize = ((OTOnByteArrayROutput *)otOutput)->getLength();
+	vector<byte> p2Inputs((byte*)c->GetArr(), (byte*)c->GetArr() + c->GetSize());
+	int p2InputsSize = c->GetSize();
 	// Get party two input wires' indices.
 	vector<byte> allInputs(p1InputsSize + p2InputsSize);
     memcpy(&allInputs[0], p1Inputs, p1InputsSize);
@@ -254,7 +251,7 @@ void PartyTwo::runOnline() {
 	auto output = runOTProtocol(ungarbledInput.data(), ungarbledInput.size());
 
 	// Compute the circuit.
-	computeCircuit(output.get());
+	computeCircuit(output);
 
 	// we're done print the output
 	if (print_output)
@@ -266,6 +263,32 @@ void PartyTwo::runOnline() {
 		cout << endl;
 	}
 }
+
+CBitVector* PartyTwo::runOTProtocol(byte* sigmaArr, int arrSize)
+{
+    //Create an OT input object with the given sigmaArr.
+    vector<byte> sigma;
+    copy_byte_array_to_byte_vector(sigmaArr, arrSize, sigma, 0);
+    int elementSize = 128;
+    uint32_t bitlength = 8;
+    uint32_t runs = 1;
+    uint32_t nsndvals = 2;
+    uint64_t numOTs = 100000;
+    int m_nNumOTThreads = 1;
+
+    MaskingFunction* m_fMaskFct = new XORMasking(bitlength);
+    CBitVector *choices, *response;
+    choices->Create((size_t )(numOTs * ceil_log2(nsndvals)), m_crypt);
+    response->Create(numOTs, bitlength);
+    response->Reset();
+
+
+    bool success = m_receiver->receive(numOTs, bitlength, nsndvals, choices, response,
+            Snd_OT, Rec_OT, m_nNumOTThreads, m_fMaskFct);
+
+    return response;
+
+};
 
 void PartyTwo::receiveCircuit() {
 

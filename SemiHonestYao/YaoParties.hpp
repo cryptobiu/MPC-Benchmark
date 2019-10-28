@@ -26,7 +26,8 @@
 */
 
 
-#pragma once 
+#pragma once
+#include <memory>
 #include <thread>
 #include <boost/thread/thread.hpp>
 
@@ -42,14 +43,23 @@
 
 
 #ifdef NO_AESNI
-#include <libscapi/include/circuits/GarbledBooleanCircuitNoIntrinsics.h>
-#include <ot/alsz-ot-ext-snd.h>
-#include <ot/alsz-ot-ext-rec.h>
-#include <ot/xormasking.h>
-#include <ENCRYPTO_utils/rcvthread.h>
-#include <ENCRYPTO_utils/sndthread.h>
+#include <ENCRYPTO_utils/timer.h>
+#include <ENCRYPTO_utils/socket.h>
 #include <ENCRYPTO_utils/channel.h>
+#include <ENCRYPTO_utils/typedefs.h>
+#include <ENCRYPTO_utils/sndthread.h>
+#include <ENCRYPTO_utils/rcvthread.h>
+#include <ENCRYPTO_utils/cbitvector.h>
 #include <ENCRYPTO_utils/connection.h>
+#include <ENCRYPTO_utils/crypto/crypto.h>
+#include <ENCRYPTO_utils/parse_options.h>
+#include <ENCRYPTO_utils/crypto/ecc-pk-crypto.h>
+
+#include <ot/xormasking.h>
+#include <ot/iknp-ot-ext-snd.h>
+#include <ot/iknp-ot-ext-rec.h>
+
+#include <libscapi/include/circuits/GarbledBooleanCircuitNoIntrinsics.h>
 
 #else
 #include <libscapi/include/circuits/GarbledBooleanCircuit.h>
@@ -78,11 +88,7 @@ struct YaoConfig {
 	};
 
 	YaoConfig(string config_file) {
-#ifdef _WIN32
-		string os = "Windows";
-#else
 		string os = "Linux";
-#endif
 		ConfigFile cf(config_file);
 		cout<<"after config file"<<endl;
 		string str_print_output = cf.Value("", "print_output");
@@ -106,7 +112,7 @@ private:
     OTExtSnd *m_sender;			//The OT object that used in the protocol.
     SndThread* m_senderThread;
     RcvThread* m_receiverThread;
-    unique_ptr<CSocket> m_socket;
+    shared_ptr<CSocket> m_socket;
     uint32_t m_nSecParam = 128;
     const int m_cConstSeed = 437398417012387813714564100; // DEBUG ONLY
     const int m_nBaseOTs = 190;
@@ -152,15 +158,17 @@ public:
 	*/
 	PartyOne(int argc, char* argv[]);
 
-	~PartyOne() {
-#ifdef NO_AESNI
-        delete [] get<0>(values);
-        delete [] get<1>(values);
-#else
-        //delete inputs and output block arrays
-#endif
-		delete circuit;
-		delete m_sender;
+	~PartyOne()
+	{
+//#ifdef NO_AESNI
+//        delete [] get<0>(values);
+//        delete [] get<1>(values);
+//#else
+//        //delete inputs and output block arrays
+//#endif
+//		delete circuit;
+//		delete m_sender;
+//
 
 
 	}
@@ -184,7 +192,7 @@ class PartyTwo : public MPCProtocol, public SemiHonest{
 private:
 	int id;
     OTExtRec * m_receiver;  //The OT object that used in the protocol.
-    unique_ptr<CSocket> m_socket;
+    shared_ptr<CSocket> m_socket;
     SndThread* m_senderThread;
     RcvThread* m_receiverThread;
     uint32_t m_nSecParam = 128;
@@ -212,7 +220,7 @@ private:
 	* Compute the garbled circuit.
 	* @param otOutput The output from the OT protocol, which are party two inputs.
 	*/
-	void computeCircuit();
+	void computeCircuit(CBitVector *c);
 
 	/**
 	* Receive the circuit's garbled tables and translation table.
@@ -227,15 +235,6 @@ private:
 	* @param sigmaArr Contains a byte indicates for each input wire which key to get.
 	* @return The output from the OT protocol, party tw oinputs.
 	*/
-	shared_ptr<OTBatchROutput> runOTProtocol(byte* sigmaArr, int arrSize) {
-		//Create an OT input object with the given sigmaArr.
-		vector<byte> sigma;
-		copy_byte_array_to_byte_vector(sigmaArr, arrSize, sigma, 0);
-		int elementSize = 128;
-		OTBatchRInput * input = new OTExtensionGeneralRInput(sigma, elementSize);
-		//Run the Ot protocol.
-		return otReceiver->transfer(input);
-	};
 
 public:
 	/**
@@ -261,9 +260,10 @@ public:
 
     void runOnline() override;
 
+    CBitVector* runOTProtocol(byte* sigmaArr, int arrSize);
+
 	vector<byte> getOutput() {	return circuitOutput; }
 
 	YaoConfig& getConfig() { return yaoConfig; }
-
-	int getID() {return id;}
+    int getID() {return id;}
 };
