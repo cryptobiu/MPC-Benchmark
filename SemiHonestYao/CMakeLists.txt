@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 project(SemiHonestYao)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O3 -std=c++14 -march=armv8-a -Wno-ignored-attributes -flax-vector-conversions")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -std=c++14 -march=armv8-a -Wno-ignored-attributes -flax-vector-conversions")
 
 INCLUDE_DIRECTORIES($ENV{HOME} $ENV{HOME}/libscapi/install/include
         $ENV{HOME}/libscapi/install/include $ENV{HOME}/OTExtension/

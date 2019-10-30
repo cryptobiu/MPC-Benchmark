@@ -77,13 +77,16 @@ PartyOne::PartyOne(int argc, char* argv[]) : MPCProtocol("SemiHonestYao", argc, 
 	cout<<"sender ip: "<<senderParty.getIpAddress() <<"port:"<<senderParty.getPort()<<endl;
 
     m_socket = Listen(senderParty.getIpAddress().to_string(), 7766);
+    cout << "After listen" << endl;
     m_clock = new CLock();
     m_senderThread = new SndThread(m_socket.get(), m_clock);
     m_receiverThread = new RcvThread(m_socket.get(), m_clock);
+
+    m_receiverThread->Start();
+    m_senderThread->Start();
+
     m_crypt = new crypto(m_nSecParam, (uint8_t*) this->m_cConstSeed);
 	m_sender = new IKNPOTExtSnd(m_crypt, m_receiverThread, m_senderThread);
-
-
 };
 
 void PartyOne::setInputs(string inputFileName, int numInputs) {
@@ -202,14 +205,16 @@ PartyTwo::PartyTwo(int argc, char* argv[]) : MPCProtocol("SemiHonestYao", argc, 
 	// create the OT receiver.
 	SocketPartyData senderParty(IpAddress::from_string(sender_ip), sender_port+1);
 
-    m_socket = Listen(senderParty.getIpAddress().to_string(), 7766);
+    m_socket = Connect(senderParty.getIpAddress().to_string(), 7766);
     m_clock = new CLock();
     m_senderThread = new SndThread(m_socket.get(), m_clock);
     m_receiverThread = new RcvThread(m_socket.get(), m_clock);
 
+    m_receiverThread->Start();
+    m_senderThread->Start();
+
     m_crypt = new crypto(m_nSecParam, (uint8_t*) this->m_cConstSeed);
     m_receiver = new IKNPOTExtRec(m_crypt, m_receiverThread, m_senderThread);
-
 
 }
 
@@ -278,7 +283,7 @@ CBitVector* PartyTwo::runOTProtocol(byte* sigmaArr, int arrSize)
 
     MaskingFunction* m_fMaskFct = new XORMasking(bitlength);
     CBitVector *choices, *response;
-    choices->Create((size_t )(numOTs * ceil_log2(nsndvals)), m_crypt);
+    choices->Create(numOTs * ceil_log2(nsndvals), m_crypt);
     response->Create(numOTs, bitlength);
     response->Reset();
 
