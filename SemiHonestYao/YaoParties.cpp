@@ -85,8 +85,9 @@ PartyOne::PartyOne(int argc, char* argv[]) : MPCProtocol("SemiHonestYao", argc, 
     m_receiverThread->Start();
     m_senderThread->Start();
 
-    m_crypt = new crypto(m_nSecParam, (uint8_t*) this->m_cConstSeed);
+    m_crypt = new crypto(m_nSecParam, &(this->m_cConstSeed));
 	m_sender = new IKNPOTExtSnd(m_crypt, m_receiverThread, m_senderThread);
+	m_sender->ComputeBaseOTs(P_FIELD);
 };
 
 void PartyOne::setInputs(string inputFileName, int numInputs) {
@@ -127,6 +128,23 @@ void PartyOne::runOnline() {
 	
 }
 
+
+BOOL PartyOne::ObliviouslySend(CBitVector** X, int numOTs, int bitlength, uint32_t nsndvals,
+                     snd_ot_flavor stype, rec_ot_flavor rtype, crypto* crypt)
+{
+    bool success = FALSE;
+
+    m_socket->ResetSndCnt();
+    m_socket->ResetRcvCnt();
+    // Execute OT sender routine
+    MaskingFunction* m_fMaskFct = new XORMasking(bitlength);
+    int m_nNumOTThreads = 1;
+    success = m_sender->send(numOTs, bitlength, nsndvals, X, stype, rtype, m_nNumOTThreads, m_fMaskFct);
+
+
+    return success;
+}
+
 void PartyOne::runOTProtocol() {
 	//Get the indices of p2 input wires.
 	int p1InputSize, p2InputSize;
@@ -147,7 +165,7 @@ void PartyOne::runOTProtocol() {
 		x1Arr.insert(x1Arr.end(), &allInputWireValues[beginIndex1], &allInputWireValues[beginIndex1 + KEY_SIZE]);
 	}
 
-    uint64_t numOTs = 100000;
+    uint64_t numOTs = 1;
     //bitlength of the values that are transferred - NOTE that when bitlength is not 1 or a multiple of 8, the endianness has to be observed
     uint32_t bitlength = 8;
     uint32_t runs = 1;
@@ -165,9 +183,9 @@ void PartyOne::runOTProtocol() {
         X[i] = new CBitVector();
         X[i]->Create(numOTs, bitlength);
     }
-
-    bool success = m_sender->send(numOTs, bitlength, nsndvals, X,
-            Snd_OT, Rec_OT, m_nNumOTThreads, m_fMaskFct);
+    bool success = ObliviouslySend(X, numOTs, bitlength, nsndvals, Snd_OT, Rec_OT, m_crypt);
+//    bool success = m_sender->send(numOTs, bitlength, nsndvals, X,
+//            Snd_OT, Rec_OT, m_nNumOTThreads, m_fMaskFct);
 }
 
 /*********************************/
@@ -213,8 +231,9 @@ PartyTwo::PartyTwo(int argc, char* argv[]) : MPCProtocol("SemiHonestYao", argc, 
     m_receiverThread->Start();
     m_senderThread->Start();
 
-    m_crypt = new crypto(m_nSecParam, (uint8_t*) this->m_cConstSeed);
+    m_crypt = new crypto(m_nSecParam, &this->m_cConstSeed);
     m_receiver = new IKNPOTExtRec(m_crypt, m_receiverThread, m_senderThread);
+    m_receiver->ComputeBaseOTs(P_FIELD);
 
 }
 
@@ -269,6 +288,23 @@ void PartyTwo::runOnline() {
 	}
 }
 
+BOOL PartyTwo::ObliviouslyReceive(CBitVector* choices, CBitVector* ret, int numOTs, int bitlength, uint32_t nsndvals,
+                        snd_ot_flavor stype, rec_ot_flavor rtype, crypto* crypt)
+{
+    bool success = FALSE;
+
+    m_socket->ResetSndCnt();
+    m_socket->ResetRcvCnt();
+    MaskingFunction* m_fMaskFct = new XORMasking(bitlength);
+    int m_nNumOTThreads = 1;
+    // Execute OT receiver routine
+    success = m_receiver->receive(numOTs, bitlength, nsndvals, choices, ret, stype, rtype, m_nNumOTThreads, m_fMaskFct);
+
+    return success;
+}
+
+
+
 CBitVector* PartyTwo::runOTProtocol(byte* sigmaArr, int arrSize)
 {
     //Create an OT input object with the given sigmaArr.
@@ -278,20 +314,21 @@ CBitVector* PartyTwo::runOTProtocol(byte* sigmaArr, int arrSize)
     uint32_t bitlength = 8;
     uint32_t runs = 1;
     uint32_t nsndvals = 2;
-    uint64_t numOTs = 100000;
+    uint64_t numOTs = 1;
     int m_nNumOTThreads = 1;
 
     MaskingFunction* m_fMaskFct = new XORMasking(bitlength);
-    CBitVector *choices, *response;
-    choices->Create(numOTs * ceil_log2(nsndvals), m_crypt);
-    response->Create(numOTs, bitlength);
-    response->Reset();
+    CBitVector choices, response;
+    numOTs = numOTs * ceil_log2(nsndvals);
+    choices.Create(numOTs, m_crypt);
+    response.Create(numOTs, bitlength);
+    response.Reset();
 
+    bool success = ObliviouslyReceive(&choices, &response, numOTs, bitlength, nsndvals,
+            Snd_OT, Rec_OT, m_crypt);
+    CBitVector * data(&response);
 
-    bool success = m_receiver->receive(numOTs, bitlength, nsndvals, choices, response,
-            Snd_OT, Rec_OT, m_nNumOTThreads, m_fMaskFct);
-
-    return response;
+    return data;
 
 };
 

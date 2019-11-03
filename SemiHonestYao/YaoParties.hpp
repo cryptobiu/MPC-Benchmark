@@ -114,7 +114,7 @@ private:
     RcvThread* m_receiverThread;
     shared_ptr<CSocket> m_socket;
     uint32_t m_nSecParam = 128;
-    const int m_cConstSeed = 437398417012387813714564100; // DEBUG ONLY
+    uint8_t m_cConstSeed = 43; // DEBUG ONLY
     const int m_nBaseOTs = 190;
     const int m_nChecks = 380;
     CLock *m_clock;
@@ -146,6 +146,8 @@ private:
 	* @param allInputWireValues The keys for each wire.
 	*/
 	void runOTProtocol();
+    BOOL ObliviouslySend(CBitVector** X, int numOTs, int bitlength, uint32_t nsndvals,
+                         snd_ot_flavor stype, rec_ot_flavor rtype, crypto* crypt);
 
 public:
 	/**
@@ -196,7 +198,7 @@ private:
     SndThread* m_senderThread;
     RcvThread* m_receiverThread;
     uint32_t m_nSecParam = 128;
-    const int m_cConstSeed = 15657566154164561; // DEBUG ONLY
+    uint8_t m_cConstSeed = 156; // DEBUG ONLY
     const int m_nBaseOTs = 190;
     const int m_nChecks = 380;
     CLock *m_clock;
@@ -235,6 +237,9 @@ private:
 	* @param sigmaArr Contains a byte indicates for each input wire which key to get.
 	* @return The output from the OT protocol, party tw oinputs.
 	*/
+
+    BOOL ObliviouslyReceive(CBitVector* choices, CBitVector* ret, int numOTs, int bitlength, uint32_t nsndvals,
+                            snd_ot_flavor stype, rec_ot_flavor rtype, crypto* crypt);
 
 public:
 	/**
